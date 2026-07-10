@@ -1,0 +1,21 @@
+/* sakura — soft cherry-blossom pink with a deeper rose partner. A gentle,
+   washi-friendly accent. (The hue nihongo-study happens to use, but the preset
+   doesn't know that.) */
+:root,
+[data-theme="dark"] {
+  --accent: 196 115 138;
+  --accent-2: 184 92 122;
+  --accent-focus: 208 143 162;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(196, 115, 138, 0.16);
+  --accent-grad: linear-gradient(120deg, #c4738a, #b05c7a 55%, #9c5f86);
+}
+
+[data-theme="light"] {
+  --accent: 196 115 138;
+  --accent-2: 176 82 112;
+  --accent-focus: 182 96 124;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(196, 115, 138, 0.12);
+  --accent-grad: linear-gradient(120deg, #b0567a, #c4738a 55%, #d08fa6);
+}

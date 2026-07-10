@@ -3,4 +3,5 @@ dist
 .ladle/build
 build
 *.log
+*.tgz
 .DS_Store
