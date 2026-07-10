@@ -32,11 +32,33 @@ set `data-theme="light" | "dark"` on `<html>` to flip themes.
 
 ### Bringing your own accent
 
-Skip the preset and define the slot yourself — the library stays agnostic:
+Skip the accent preset and define the slot yourself — the library stays agnostic:
 
 ```css
 :root { --accent: 178 59 59; --accent-focus: 199 91 91; --accent-ink: 255 255 255; }
 ```
+
+### Tailwind
+
+Apps on Tailwind get a **preset** that bridges every token into the theme, so app
+CSS is written as utilities against the DS vocabulary (`bg-accent`, `text-fg-muted`,
+`rounded-md`, `shadow-glass`, `ease-glass`, `z-tabbar`, …). The components still
+ship as compiled CSS, so a `<Button>` looks identical regardless of the app's theme.
+
+```ts
+// tailwind.config.ts
+import dsPreset from "@quentinandrieu/design-system/tailwind-preset";
+
+export default {
+  presets: [dsPreset],
+  content: ["./src/**/*.{ts,tsx}"],
+};
+```
+
+The token *values* still come from `styles.css` (import it once) and flip with
+`data-theme`; the preset only wires the variables into Tailwind's scales. Structural
+colors keep the alpha modifier (`bg-accent/40`); pre-composed rgba tokens
+(`fg-muted`, `glass`, `accent-wash`) ignore it.
 
 ## Developing
 
@@ -61,3 +83,4 @@ npm version patch && git push --follow-tags
 - `src/styles/components.css` — `ds-*` classes
 - `src/accents/*.css` — hue presets (`ember`, `iris`, `jade`)
 - `src/components/*` — `Glass`, `Button`, `Sheet`, `TabBar`, `Field`
+- `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)

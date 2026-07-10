@@ -9,7 +9,9 @@
     "*.css"
   ],
   "files": [
-    "dist"
+    "dist",
+    "tailwind-preset.js",
+    "tailwind-preset.d.ts"
   ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -21,7 +23,12 @@
     },
     "./styles.css": "./dist/styles/index.css",
     "./tokens.css": "./dist/styles/tokens.css",
-    "./accents/*": "./dist/accents/*"
+    "./accents/*": "./dist/accents/*",
+    "./tailwind-preset": {
+      "types": "./tailwind-preset.d.ts",
+      "import": "./tailwind-preset.js",
+      "default": "./tailwind-preset.js"
+    }
   },
   "scripts": {
     "dev": "ladle serve",
