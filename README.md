@@ -42,8 +42,10 @@ Skip the accent preset and define the slot yourself — the library stays agnost
 
 Apps on Tailwind get a **preset** that bridges every token into the theme, so app
 CSS is written as utilities against the DS vocabulary (`bg-accent`, `text-fg-muted`,
-`rounded-md`, `shadow-glass`, `ease-glass`, `z-tabbar`, …). The components still
-ship as compiled CSS, so a `<Button>` looks identical regardless of the app's theme.
+`rounded-pill`, `shadow-glass`, `ease-glass`, `z-tabbar`, …). It is **additive-only** —
+it never overrides Tailwind's own radius/font/duration scales, so it drops onto an
+existing Tailwind app without resizing corners. The components still ship as compiled
+CSS, so a `<Button>` looks identical regardless of the app's theme.
 
 ```ts
 // tailwind.config.ts
