@@ -1,0 +1,20 @@
+/* iris — electric purple with a pink partner. (The hue miru happens to use.) */
+:root,
+[data-theme="dark"] {
+  --accent: 143 92 255;
+  --accent-2: 255 94 168;
+  --accent-focus: 167 124 255;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(143, 92, 255, 0.2);
+  /* miru's signature three-stop wash */
+  --accent-grad: linear-gradient(120deg, #ff5ea8, #8f5cff 60%, #6e8bff);
+}
+
+[data-theme="light"] {
+  --accent: 108 79 224;
+  --accent-2: 226 58 136;
+  --accent-focus: 90 62 200;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(143, 92, 255, 0.14);
+  --accent-grad: linear-gradient(120deg, #e23a88, #6c4fe0 60%, #5a72d6);
+}

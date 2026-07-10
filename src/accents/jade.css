@@ -1,0 +1,19 @@
+/* jade — cool mint green. A third option to prove the slot is app-agnostic. */
+:root,
+[data-theme="dark"] {
+  --accent: 61 220 151;
+  --accent-2: 76 201 240;
+  --accent-focus: 96 232 172;
+  --accent-ink: 8 26 20;
+  --accent-wash: rgba(61, 220, 151, 0.16);
+  --accent-grad: linear-gradient(120deg, #3ddc97, #2fb3c9 60%, #4cc9f0);
+}
+
+[data-theme="light"] {
+  --accent: 22 163 110;
+  --accent-2: 20 140 150;
+  --accent-focus: 16 140 94;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(22, 163, 110, 0.12);
+  --accent-grad: linear-gradient(120deg, #16a36e, #139aa0 60%, #1aa7c0);
+}

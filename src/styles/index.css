@@ -1,0 +1,5 @@
+/* The single entry an app imports: `@quentinandrieu/design-system/styles.css`.
+   Order matters only for readability — CSS vars resolve at use time. */
+@import "./tokens.css";
+@import "./base.css";
+@import "./components.css";

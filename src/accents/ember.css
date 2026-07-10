@@ -1,0 +1,20 @@
+/* ember — warm racing red with an orange partner. (The hue kurumon happens to
+   use, but the preset doesn't know that.) */
+:root,
+[data-theme="dark"] {
+  --accent: 178 59 59;
+  --accent-2: 210 39 48;
+  --accent-focus: 199 91 91;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(178, 59, 59, 0.18);
+  --accent-grad: linear-gradient(120deg, #d22730, #b23b3b 60%, #8a4a2f);
+}
+
+[data-theme="light"] {
+  --accent: 178 59 59;
+  --accent-2: 178 36 44;
+  --accent-focus: 160 48 48;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(178, 59, 59, 0.12);
+  --accent-grad: linear-gradient(120deg, #b2242c, #b23b3b 60%, #9a5033);
+}

@@ -1,0 +1,57 @@
+{
+  "name": "@quentinandrieu/design-system",
+  "version": "0.0.0",
+  "description": "Glass design system shared across QuentinAndrieu's apps (kurumon, miru, nihongo-study …).",
+  "license": "MIT",
+  "author": "Quentin Andrieu",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles/index.css",
+    "./tokens.css": "./dist/styles/tokens.css",
+    "./accents/*": "./dist/accents/*"
+  },
+  "scripts": {
+    "dev": "ladle serve",
+    "docs:build": "ladle build",
+    "build": "tsup && cp -r src/styles dist/ && cp -r src/accents dist/",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.0"
+  },
+  "devDependencies": {
+    "@ladle/react": "^4.1.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuentinAndrieu/design-system.git"
+  }
+}

@@ -1,0 +1,122 @@
+/* =============================================================================
+   @quentinandrieu/design-system — tokens
+   -----------------------------------------------------------------------------
+   The canonical, APP-AGNOSTIC vocabulary. This file never names a consumer app.
+   Structural colors are RGB channel triplets so Tailwind's
+   `rgb(var(--x) / <alpha>)` modifier keeps working in the Next.js apps, while
+   plain rgb()/rgba() consumption works everywhere else (miru's plain CSS).
+
+   The brand hue is NOT defined here — it lives in accents/*.css and fills the
+   `--accent*` slot below. The default accent is a neutral slate so the system
+   is fully usable with no accent chosen.
+   ========================================================================== */
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* — surfaces & ink (RGB triplets) — */
+  --bg: 11 13 18;
+  --bg-raised: 19 22 29;
+  --fg: 232 234 240;
+  --fg-muted: rgba(232, 234, 240, 0.64);
+  --fg-faint: rgba(232, 234, 240, 0.42);
+
+  /* — accent SLOT (agnostic; overridden by accents/*.css). Neutral default. — */
+  --accent: 124 132 156;
+  --accent-2: 150 158 180;
+  --accent-focus: 150 158 180;
+  --accent-ink: 232 234 240;
+  --accent-wash: rgba(124, 132, 156, 0.14);
+
+  /* — semantic status colors — */
+  --success: 61 220 151;
+  --danger: 255 110 122;
+  --gold: 255 209 102;
+
+  /* — glass material: the shared recipe every app inherits — */
+  --glass-bg: rgba(19, 22, 29, 0.46);
+  --glass-filter: blur(14px) saturate(150%) brightness(1.12);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-rim-lit: rgba(255, 255, 255, 0.3);
+  --glass-rim-far: rgba(255, 255, 255, 0.1);
+  --glass-ring: rgba(255, 255, 255, 0.06);
+  --glass-shadow: 0 14px 36px -12px rgba(0, 0, 0, 0.75);
+
+  /* — heavier glass layers (modals, sheets, scrim) — */
+  --glass-panel-bg: rgba(17, 20, 27, 0.88);
+  --glass-panel-filter: blur(28px) saturate(150%) brightness(1.06);
+  --glass-sheet-bg: rgba(17, 20, 27, 0.72);
+  --scrim-bg: rgba(4, 5, 8, 0.64);
+
+  /* — neutral ambient washes the glass refracts (accent wash set by preset) — */
+  --wash-steel: rgba(126, 138, 156, 0.1);
+  --wash-night: rgba(48, 104, 174, 0.14);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: 240 238 232;
+  --bg-raised: 255 255 255;
+  --fg: 26 28 34;
+  --fg-muted: rgba(26, 28, 34, 0.66);
+  --fg-faint: rgba(26, 28, 34, 0.44);
+
+  --accent: 108 116 140;
+  --accent-2: 84 92 116;
+  --accent-focus: 84 92 116;
+  --accent-ink: 26 28 34;
+  --accent-wash: rgba(108, 116, 140, 0.12);
+
+  --success: 22 163 110;
+  --danger: 214 64 76;
+  --gold: 194 138 20;
+
+  --glass-bg: rgba(255, 255, 255, 0.52);
+  --glass-filter: blur(12px) saturate(180%) brightness(1.04);
+  --glass-border: rgba(26, 28, 34, 0.08);
+  --glass-rim-lit: rgba(255, 255, 255, 0.95);
+  --glass-rim-far: rgba(255, 255, 255, 0.55);
+  --glass-ring: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 12px 30px -12px rgba(26, 28, 34, 0.32);
+
+  --glass-panel-bg: rgba(248, 246, 242, 0.86);
+  --glass-panel-filter: blur(24px) saturate(180%) brightness(1.02);
+  --glass-sheet-bg: rgba(250, 249, 247, 0.74);
+  --scrim-bg: rgba(26, 20, 18, 0.42);
+
+  --wash-steel: rgba(126, 138, 156, 0.1);
+  --wash-night: rgba(70, 110, 160, 0.1);
+}
+
+/* — scale, motion & derived tokens (theme-independent) — */
+:root {
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 0.12s;
+  --dur: 0.22s;
+
+  /* Accent gradient, derived from the accent slot. Accent presets may override
+     this with a signature multi-stop gradient. */
+  --accent-grad: linear-gradient(
+    120deg,
+    rgb(var(--accent)),
+    rgb(var(--accent-2))
+  );
+
+  /* font-role slots — system defaults; apps override with their own faces */
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: var(--font-sans);
+  --font-jp: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+
+  --z-tabbar: 40;
+  --z-scrim: 45;
+  --z-sheet: 50;
+}
