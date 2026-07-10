@@ -4,6 +4,8 @@ export interface Tab {
   id: string;
   label: string;
   icon?: ReactNode;
+  /** Dim + block the tab (e.g. a destination with no content yet). */
+  disabled?: boolean;
 }
 
 export interface TabBarProps {
@@ -21,6 +23,7 @@ export function TabBar({ tabs, active, onChange }: TabBarProps) {
           key={t.id}
           role="tab"
           aria-selected={t.id === active}
+          disabled={t.disabled}
           className="ds-tab"
           onClick={() => onChange(t.id)}
         >

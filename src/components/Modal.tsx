@@ -9,6 +9,12 @@ export interface ModalProps {
   children: ReactNode;
   /** Footer actions (buttons). Omit for a plain panel. */
   footer?: ReactNode;
+  /**
+   * When set, the body + footer render inside a `<form>` and Enter (or a
+   * `type="submit"` footer button) calls this — `preventDefault` is handled.
+   * Lets a short dialog submit without reaching for the mouse.
+   */
+  onSubmit?: () => void;
 }
 
 /**
@@ -22,7 +28,14 @@ export function Modal({
   title,
   children,
   footer,
+  onSubmit,
 }: ModalProps) {
+  const body = (
+    <>
+      <div className="ds-modal__body">{children}</div>
+      {footer ? <div className="ds-modal__foot">{footer}</div> : null}
+    </>
+  );
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger ? <Dialog.Trigger asChild>{trigger}</Dialog.Trigger> : null}
@@ -32,8 +45,18 @@ export function Modal({
           <div className="ds-modal__head">
             <Dialog.Title className="ds-modal__title">{title}</Dialog.Title>
           </div>
-          <div className="ds-modal__body">{children}</div>
-          {footer ? <div className="ds-modal__foot">{footer}</div> : null}
+          {onSubmit ? (
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                onSubmit();
+              }}
+            >
+              {body}
+            </form>
+          ) : (
+            body
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

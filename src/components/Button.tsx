@@ -1,13 +1,18 @@
 import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
 
-export type ButtonVariant = "solid" | "gradient" | "glass" | "ghost";
+export type ButtonVariant =
+  | "solid"
+  | "gradient"
+  | "glass"
+  | "ghost"
+  | "outline";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /**
    * `solid` fills with the flat accent (default); `gradient` is the opt-in
    * signature gradient for a single hero action; `glass` is a frosted chip;
-   * `ghost` is text-only.
+   * `outline` is a bordered secondary action; `ghost` is text-only.
    */
   variant?: ButtonVariant;
 }

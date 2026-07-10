@@ -23,6 +23,7 @@
     },
     "./styles.css": "./dist/styles/index.css",
     "./tokens.css": "./dist/styles/tokens.css",
+    "./components.css": "./dist/styles/components.css",
     "./accents/*": "./dist/accents/*",
     "./tailwind-preset": {
       "types": "./tailwind-preset.d.ts",
