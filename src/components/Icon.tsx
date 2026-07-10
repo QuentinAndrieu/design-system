@@ -45,6 +45,15 @@ const ICONS = {
     </>
   ),
   x: <path d="M6 6l12 12M18 6 6 18" />,
+  dice: (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
+      <circle cx="9" cy="9" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="9" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="15" r="1.3" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="15" r="1.3" fill="currentColor" stroke="none" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof ICONS;
