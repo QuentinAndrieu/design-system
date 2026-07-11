@@ -3,6 +3,7 @@ import { Slider } from "./Slider";
 import { Switch } from "./Switch";
 import { Rating } from "./Rating";
 import { Dropdown } from "./Dropdown";
+import { MultiSelect } from "./MultiSelect";
 import { SheetRow } from "./SheetRow";
 import { Glass } from "./Glass";
 import { Icon } from "./Icon";
@@ -33,6 +34,27 @@ export const Select = () => {
         { value: "recent", label: "Recently added" },
         { value: "score", label: "Highest score" },
         { value: "title", label: "Title (A–Z)" },
+      ]}
+    />
+  );
+};
+
+export const MultiSelectFilter = () => {
+  const [sel, setSel] = useState<string[]>(["power"]);
+  const toggle = (v: string) =>
+    setSel((s) => (s.includes(v) ? s.filter((x) => x !== v) : [...s, v]));
+  return (
+    <MultiSelect
+      label="Energy"
+      value={sel}
+      onChange={toggle}
+      onClear={() => setSel([])}
+      options={[
+        { value: "power", label: "Power", color: "#e0553b" },
+        { value: "grip", label: "Grip", color: "#3b9ae0" },
+        { value: "sound", label: "Sound", color: "#c26bd6" },
+        { value: "aero", label: "Aero", color: "#3bd6a0" },
+        { value: "tech", label: "Tech", color: "#7c84a0" },
       ]}
     />
   );

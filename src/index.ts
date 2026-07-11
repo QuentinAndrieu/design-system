@@ -50,6 +50,11 @@ export { Field } from "./components/Field";
 export type { FieldProps } from "./components/Field";
 export { Dropdown } from "./components/Dropdown";
 export type { DropdownProps, DropdownOption } from "./components/Dropdown";
+export { MultiSelect } from "./components/MultiSelect";
+export type {
+  MultiSelectProps,
+  MultiSelectOption,
+} from "./components/MultiSelect";
 export { Slider } from "./components/Slider";
 export type { SliderProps } from "./components/Slider";
 export { Switch } from "./components/Switch";
