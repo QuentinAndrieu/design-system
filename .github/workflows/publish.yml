@@ -1,8 +1,6 @@
 name: publish
 
-# Cut a release by pushing a tag:  npm version <patch|minor|major> && git push --follow-tags
-# Publishes @quentinandrieu/design-system to the PUBLIC npm registry.
-# Requires an npm automation token stored as the NPM_TOKEN repo secret.
+# Cut a release by pushing a tag:  npm version patch && git push --follow-tags
 on:
   push:
     tags: ["v*"]
@@ -12,13 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
+          node-version: 20
+          registry-url: https://npm.pkg.github.com
       - run: npm ci
       - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
