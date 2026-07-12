@@ -480,10 +480,13 @@
 .ds-tabbar {
   position: fixed;
   left: 50%;
-  /* Float just past the home-indicator inset — NOT inset + 12px, which over-lifts the capsule and
-     leaves a dead band below it on notched iPhones. max(inset, 12px) hugs the safe area (≈34px) and
-     keeps a 12px floor where there's no inset. */
-  bottom: max(env(safe-area-inset-bottom), 12px);
+  /* Sit just ABOVE the home indicator with a small, constant gap. env(safe-area-inset-bottom) on
+     Face ID iPhones is ~34px — the full home-indicator band — so floating the capsule by the WHOLE
+     inset (max(inset, 12px)) leaves that entire band empty below it, which reads as an unwanted
+     bottom margin. Subtract ~1rem so the capsule hugs the indicator (≈18px gap on iPhone) instead of
+     reserving the whole inset, with a 0.75rem floor for devices that report no inset (Touch ID
+     iPhones, most Android). */
+  bottom: max(env(safe-area-inset-bottom) - 1rem, 0.75rem);
   transform: translateX(-50%);
   z-index: var(--z-tabbar);
   width: min(480px, calc(100vw - 28px));
