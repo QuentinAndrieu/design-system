@@ -36,7 +36,7 @@
     "docs:build": "ladle build",
     "build": "tsup && cp -r src/styles dist/ && cp -r src/accents dist/",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm run build"
   },
   "peerDependencies": {
     "react": "^19",
@@ -53,10 +53,6 @@
     "react-dom": "^19.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.7.0"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
-    "access": "restricted"
   },
   "repository": {
     "type": "git",
