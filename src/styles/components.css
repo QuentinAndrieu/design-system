@@ -480,7 +480,10 @@
 .ds-tabbar {
   position: fixed;
   left: 50%;
-  bottom: calc(12px + env(safe-area-inset-bottom));
+  /* Float just past the home-indicator inset — NOT inset + 12px, which over-lifts the capsule and
+     leaves a dead band below it on notched iPhones. max(inset, 12px) hugs the safe area (≈34px) and
+     keeps a 12px floor where there's no inset. */
+  bottom: max(env(safe-area-inset-bottom), 12px);
   transform: translateX(-50%);
   z-index: var(--z-tabbar);
   width: min(480px, calc(100vw - 28px));
