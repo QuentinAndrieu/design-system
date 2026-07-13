@@ -36,6 +36,11 @@ function scrollApi(el: HTMLElement | null) {
   };
 }
 
+/** The drag-handle strip above the body (`.ds-parallax-grip`: 6px tall + 10px
+ *  top margin) — added to the measured body height so the sheet box fits the
+ *  whole content, handle included. */
+const GRIP = 16;
+
 export interface ParallaxSheetProps {
   /** The pinned artwork — a live card / cover / poster preview (and its toggles). */
   hero: ReactNode;
@@ -61,10 +66,11 @@ export interface ParallaxSheetProps {
  * How it works — two stacked `sticky` layers inside the scroll container:
  *  - the hero (`top: topOffset`) pins the full artwork so it never moves;
  *  - the sheet (`top: peek`) rises with the scroll until its top reaches `peek`
- *    (≈ just under the title), then pins there. Its box height is fixed to
- *    `viewport − peek`, so the outer scroll can travel exactly `heroHeight − strip`
- *    (enough to raise it, no more) and the long form then scrolls *inside* the
- *    sheet. `peek`/`strip` are derived from the measured hero height.
+ *    (≈ just under the title), then pins there. Its box height is the smaller of
+ *    `viewport − peek` and the natural content height: a long form fills the
+ *    former and scrolls *inside* the sheet; a short one fits snugly so it never
+ *    leaves an empty frosted panel (the artwork just shows below it).
+ *    `peek`/`strip` are derived from the measured hero height.
  */
 export function ParallaxSheet({
   hero,
@@ -74,6 +80,7 @@ export function ParallaxSheet({
 }: ParallaxSheetProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   // `strip` = the band of hero left visible above the sheet; `peek` = the sheet's
   // resting top in viewport coordinates (strip + any header offset).
   const [{ peek, strip, sheetH }, setDims] = useState({
@@ -82,31 +89,56 @@ export function ParallaxSheet({
     sheetH: 480,
   });
 
+  const measure = useCallback(() => {
+    const heroEl = heroRef.current;
+    if (!heroEl) return;
+    const api = scrollApi(getScrollParent(rootRef.current));
+    const heroH = heroEl.offsetHeight;
+    const viewH = api.clientHeight();
+    // strip ≈ the hero left visible above the sheet — tuned to land just below
+    // the title on a framed card (its name sits near the top). Clamped so it
+    // stays sensible for very short or very tall heroes.
+    const s = Math.round(Math.min(Math.max(heroH * 0.32, 130), 260));
+    const p = topOffset + s;
+    // The tallest the sheet ever needs to be: from its resting peek line to the
+    // bottom of the viewport. A long form fills this and scrolls internally.
+    const fill = Math.max(260, viewH - p);
+    // …but a *short* form must not stretch into a giant empty frosted panel (and
+    // an endless scroll of nothing) — cap the box to its natural content height
+    // (grip + body) so it fits snugly and the artwork simply shows below it.
+    const bodyEl = bodyRef.current;
+    const contentH = bodyEl ? bodyEl.scrollHeight + GRIP : fill;
+    const next = { peek: p, strip: s, sheetH: Math.min(fill, contentH) };
+    // Bail when nothing moved so the per-render re-measure below can't loop.
+    setDims((prev) =>
+      prev.peek === next.peek && prev.strip === next.strip && prev.sheetH === next.sheetH
+        ? prev
+        : next,
+    );
+  }, [topOffset]);
+
   useEffect(() => {
     const heroEl = heroRef.current;
     if (!heroEl) return;
     const scroller = getScrollParent(rootRef.current);
-    const api = scrollApi(scroller);
-    const measure = () => {
-      const heroH = heroEl.offsetHeight;
-      const viewH = api.clientHeight();
-      // strip ≈ the hero left visible above the sheet — tuned to land just below
-      // the title on a framed card (its name sits near the top). Clamped so it
-      // stays sensible for very short or very tall heroes.
-      const s = Math.round(Math.min(Math.max(heroH * 0.32, 130), 260));
-      const p = topOffset + s;
-      setDims({ peek: p, strip: s, sheetH: Math.max(260, viewH - p) });
-    };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(heroEl);
+    if (bodyRef.current) ro.observe(bodyRef.current);
     if (scroller) ro.observe(scroller);
     window.addEventListener("resize", measure);
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, [topOffset]);
+  }, [measure]);
+
+  // Re-measure after every render so the sheet tracks content that changes height
+  // without a resize (e.g. selecting a different item swaps the body) — a case a
+  // ResizeObserver can miss. The equality guard in `measure` prevents a loop.
+  useEffect(() => {
+    measure();
+  });
 
   // Tap the exposed artwork (above the sheet) to slide the sheet back down — but
   // only once it's risen, so a tap on the artwork at rest still reaches it. Taps
@@ -140,7 +172,9 @@ export function ParallaxSheet({
         style={{ top: peek, height: sheetH }}
       >
         <div className="ds-parallax-grip" aria-hidden />
-        <div className="ds-parallax-body">{children}</div>
+        <div ref={bodyRef} className="ds-parallax-body">
+          {children}
+        </div>
       </div>
     </div>
   );
