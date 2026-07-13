@@ -537,6 +537,132 @@
   cursor: default;
 }
 
+/* ================= app shell (layout frame + tab-bar clearance) ================= */
+/* Viewport + floating-tab-bar geometry, shared by every app via <AppShell>.
+   --app-viewport-h: 100% works in a browser tab, but collapses in iOS 26
+   standalone + black-translucent + viewport-fit=cover — the percentage chain
+   (and window.innerHeight, and fixed inset-0) resolves to a viewport short by
+   the status-bar height and top-anchored, leaving a dead band at the bottom no
+   CSS percentage can reach (WebKit #301108). 100vh reports the true screen
+   height from cold start in standalone, so it is the one unit that reaches the
+   real bottom edge there — scoped to standalone since 100vh overshoots in a tab. */
+:root {
+  --app-viewport-h: 100%;
+  /* Capsule hovers --tabbar-offset above the bottom edge (trims the raw
+     home-indicator inset, floors on devices without one); page-scroll shells pad
+     content by --tabbar-clearance (offset + capsule height + breathing room) so
+     the last items clear the glass. */
+  --tabbar-offset: max(env(safe-area-inset-bottom) - 0.75rem, 0.75rem);
+  --tabbar-clearance: calc(var(--tabbar-offset) + 4.25rem);
+  --ds-shell-max: 28rem;
+}
+@media (display-mode: standalone) {
+  :root {
+    --app-viewport-h: 100vh;
+  }
+}
+
+.ds-shell {
+  position: relative;
+  width: 100%;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+}
+.ds-shell--constrained {
+  max-width: var(--ds-shell-max);
+}
+.ds-shell--full {
+  max-width: none;
+}
+
+/* Header region: pinned above content (flows above a `contained` shell's scroll
+   area). Sits over the ambient/content. */
+.ds-shell-header {
+  flex: none;
+  position: relative;
+  z-index: 10;
+}
+/* In page mode the header wrapper dissolves so a `position: sticky` header can
+   travel against the document (a flex-none wrapper its own height would trap it).
+   Locked-frame modes keep the wrapper — the header is pinned there, not sticky. */
+.ds-shell--page .ds-shell-header {
+  display: contents;
+}
+
+/* Locked-frame models (fixed + contained): lock the document to the real
+   viewport height. Scoped via :has so page-scroll apps are untouched. */
+html:has(.ds-shell--fixed),
+html:has(.ds-shell--contained),
+html:has(.ds-shell--fixed) body,
+html:has(.ds-shell--contained) body {
+  height: var(--app-viewport-h);
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.ds-shell--fixed,
+.ds-shell--contained {
+  position: fixed;
+  inset: 0;
+  height: var(--app-viewport-h);
+}
+
+/* Fixed model: each screen owns its scroll — content just clips. */
+.ds-shell--fixed .ds-shell-content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Contained model: the shell owns the single scroll container; reserve clearance
+   so the last row clears the floating bar. */
+.ds-shell--contained .ds-shell-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: var(--tabbar-clearance);
+}
+
+/* Page model: document scrolls; reserve clearance so the floating bar never
+   covers the last of the content. min-height on a scrolling body needs a
+   viewport unit (100% collapses to 0) — svh in a browser tab (avoids the Safari
+   toolbar overshoot of 100vh), switched to vh in standalone where svh misreports
+   the viewport at cold launch (WebKit #301108). */
+.ds-shell--page .ds-shell-content {
+  flex: 1;
+  min-height: 100vh; /* fallback for engines without svh */
+  min-height: 100svh;
+  padding-bottom: var(--tabbar-clearance);
+}
+@media (display-mode: standalone) {
+  .ds-shell--page .ds-shell-content {
+    min-height: 100vh;
+  }
+}
+
+/* Footer region (in flow, below content). When a page-mode shell has a footer,
+   the clearance rides on the footer instead of the content, so the floating bar
+   never hides the footer's last row. */
+.ds-shell-footer {
+  flex: none;
+}
+.ds-shell--page .ds-shell-footer {
+  padding-bottom: var(--tabbar-clearance);
+}
+.ds-shell--page:has(.ds-shell-footer) .ds-shell-content {
+  padding-bottom: 0;
+}
+
+/* Ambient background layer, pinned behind content so it stays put while content
+   scrolls over it. */
+.ds-shell-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* ================= sheet (Radix Dialog) ================= */
 .ds-scrim {
   position: fixed;

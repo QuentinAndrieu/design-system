@@ -32,6 +32,10 @@ export type { ThumbnailProps } from "./components/Thumbnail";
 export { Row } from "./components/Row";
 export type { RowProps } from "./components/Row";
 
+// layout
+export { AppShell } from "./components/AppShell";
+export type { AppShellProps } from "./components/AppShell";
+
 // navigation
 export { TabBar } from "./components/TabBar";
 export type { TabBarProps, Tab } from "./components/TabBar";
