@@ -35,6 +35,8 @@ export type { RowProps } from "./components/Row";
 // layout
 export { AppShell } from "./components/AppShell";
 export type { AppShellProps } from "./components/AppShell";
+export { ParallaxSheet } from "./components/ParallaxSheet";
+export type { ParallaxSheetProps } from "./components/ParallaxSheet";
 
 // navigation
 export { TabBar } from "./components/TabBar";

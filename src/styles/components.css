@@ -714,6 +714,53 @@ html:has(.ds-shell--contained) body {
   }
 }
 
+/* ================= parallax studio sheet ================= */
+/* The card / cover / poster editor layout: the artwork is pinned behind (always
+   visible) and the configuration form is a frosted sheet that rises over it as
+   you scroll, stopping just under the title so the artwork still reads *through*
+   the translucent sheet. Two stacked `sticky` layers — see the ParallaxSheet
+   component for the measurement + tap-to-collapse behaviour. */
+.ds-parallax {
+  position: relative;
+}
+/* The pinned artwork. `top` is set inline (0, or the app header's height when a
+   sticky top bar sits above it). */
+.ds-parallax-hero {
+  position: sticky;
+  z-index: 0;
+}
+/* The rising configuration sheet. `top` (the resting peek line) and `height`
+   are set inline from the measured hero. */
+.ds-parallax-sheet {
+  position: sticky;
+  z-index: 1;
+  overflow-y: auto;
+  border-top: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--glass-sheet-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: 0 -14px 34px -16px rgba(0, 0, 0, 0.55);
+}
+.ds-parallax-grip {
+  width: 40px;
+  height: 6px;
+  margin: 10px auto 0;
+  border-radius: var(--radius-pill);
+  background: rgb(var(--fg) / 0.2);
+}
+.ds-parallax-body {
+  padding: 8px 16px calc(var(--tabbar-clearance) + 1rem);
+}
+/* Opaque fallback where backdrop-filter is unsupported (matches .ds-sheet). */
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .ds-parallax-sheet {
+    background: rgb(var(--bg-raised));
+  }
+}
+
 /* ================= feedback: skeleton ================= */
 .ds-skel {
   position: relative;
