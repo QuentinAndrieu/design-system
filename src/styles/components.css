@@ -776,6 +776,16 @@ html:has(.ds-shell--contained) body {
     background: rgb(var(--bg-raised));
   }
 }
+/* A ParallaxSheet owns its own bottom clearance — its scrolling body already pads
+   for the floating tab bar. When one is the scroll content of a `contained` shell,
+   the shell's tabbar-clearance pad on that scroller is not just redundant: it adds
+   scroll travel *past* the sheet's sticky containing block, so at full scroll the
+   sheet is stranded that far short of its peek line — a gap between the sheet's
+   bottom and the tab bar. Drop it so the frosted sheet reaches the bottom edge,
+   the tab bar floating over it. (The body's own pad still clears the last field.) */
+.ds-shell--contained .ds-shell-content:has(.ds-parallax) {
+  padding-bottom: 0;
+}
 
 /* ================= feedback: skeleton ================= */
 .ds-skel {
