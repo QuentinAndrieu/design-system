@@ -273,8 +273,24 @@
   width: 100%;
 }
 
+/* Fill: segments share the row equally. min-width:0 lets them shrink below their
+   content so a 4-tab row never overflows (the last tab used to be clipped); labels
+   truncate rather than pushing the group past its container. */
 .ds-seg--fill button {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  /* tighter side padding + icon gap buy room for labels in a crowded fill row before they
+     truncate — a 4-tab row (icon + label each) fits its labels far better this way */
+  gap: 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.ds-seg--fill button > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ds-seg button {
@@ -1270,7 +1286,8 @@ html:has(.ds-shell--contained) body {
   align-items: center;
   gap: 8px;
   min-width: 140px;
-  padding: 9px 12px;
+  min-height: var(--ctl-h, 34px);
+  padding: 0 12px;
   border-radius: var(--radius-md);
   background: rgb(var(--fg) / 0.05);
   border: 1px solid var(--glass-border);
@@ -1336,7 +1353,8 @@ html:has(.ds-shell--contained) body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 12px;
+  min-height: var(--ctl-h, 34px);
+  padding: 0 12px;
   border-radius: var(--radius-md);
   background: rgb(var(--fg) / 0.05);
   border: 1px solid var(--glass-border);

@@ -98,6 +98,11 @@
   --radius-xl: 24px;
   --radius-pill: 999px;
 
+  /* Height of an inline chrome control (SegmentedControl md). Every control that shares a
+     toolbar row with the segmented switch — MultiSelect, Dropdown, filter/icon triggers —
+     pins to this so the row reads as one consistent height. */
+  --ctl-h: 34px;
+
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-fast: 0.12s;
   --dur: 0.22s;
