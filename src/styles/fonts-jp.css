@@ -1,0 +1,25 @@
+/* =============================================================================
+   @quentinandrieu/design-system — japanese face
+   -----------------------------------------------------------------------------
+   Import alongside fonts.css, in the apps that actually render Japanese:
+
+       import "@quentinandrieu/design-system/fonts.css";
+       import "@quentinandrieu/design-system/fonts-jp.css";
+
+   Kept out of fonts.css on purpose. A Japanese face is ~120 unicode-range
+   subsets per weight — an order of magnitude more @font-face rules than a Latin
+   one — and an app with no Japanese content should not carry it.
+
+   Noto Serif JP, not Sans, by actual usage: mincho carries nihongo's learning
+   content (74 call sites) and fudoki's historical labels (18). Noto Sans JP
+   exists in the fleet only as a DOMAIN face — kurumon's logo katakana,
+   kamishibai's story SFX — and stays in those apps, never as a UI slot.
+   ========================================================================== */
+
+@import "@fontsource/noto-serif-jp/400.css";
+@import "@fontsource/noto-serif-jp/500.css";
+@import "@fontsource/noto-serif-jp/700.css";
+
+:root {
+  --font-jp: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+}

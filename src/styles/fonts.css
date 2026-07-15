@@ -1,0 +1,53 @@
+/* =============================================================================
+   @quentinandrieu/design-system — fonts
+   -----------------------------------------------------------------------------
+   The fleet's typeface pair, in one place. An app imports this ONE file and gets
+   the faces AND the slots filled:
+
+       import "@quentinandrieu/design-system/fonts.css";
+
+   Japanese is a SEPARATE entry — see fonts-jp.css. Noto Serif JP is ~120
+   unicode-range subsets per weight, and half the fleet renders no Japanese at
+   all; bundling it here would hand street-photographers a Japanese face it will
+   never draw a glyph of.
+
+   This is also separate from styles.css: it pulls real font binaries, so an app
+   opts into the weight rather than inheriting it silently.
+
+   Why these two
+     · Inter              — the fleet's sans. Already the incumbent everywhere.
+     · Cormorant Garamond — the display serif. Three Garamond-family faces were in
+                            play (Cormorant, EB, DM Serif Display); Cormorant had
+                            the widest adoption. An app may still override
+                            --font-display AFTER this file if it has a reason —
+                            fudoki keeps EB Garamond, being the most
+                            document-like app, where Cormorant's higher contrast
+                            reads thin on dense historical prose.
+
+   Why @fontsource and not next/font: these are self-hosted and same-origin, which
+   kamishibai's PNG export needs in order to embed them. next/font would also have
+   fought a DS-shipped stylesheet for the same slots.
+
+   Weights are the union of what the fleet actually used before centralising —
+   nothing regresses. Add one here rather than in an app.
+   ========================================================================== */
+
+/* — sans: UI, body, controls — */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter/800.css";
+
+/* — display: headings, editorial prose — */
+@import "@fontsource/cormorant-garamond/400.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/cormorant-garamond/600.css";
+@import "@fontsource/cormorant-garamond/700.css";
+
+/* Fills the slots declared in tokens.css. Loaded after it, so these win. Each
+   keeps a real fallback chain: a font file can always fail to arrive. */
+:root {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+}

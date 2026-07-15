@@ -1,6 +1,6 @@
 {
   "name": "@quentinandrieu/design-system",
-  "version": "0.6.4",
+  "version": "0.7.0",
   "description": "Glass design system shared across QuentinAndrieu's apps (kurumon, miru, nihongo-study …).",
   "license": "MIT",
   "author": "Quentin Andrieu",
@@ -23,6 +23,8 @@
     },
     "./styles.css": "./dist/styles/index.css",
     "./tokens.css": "./dist/styles/tokens.css",
+    "./fonts.css": "./dist/styles/fonts.css",
+    "./fonts-jp.css": "./dist/styles/fonts-jp.css",
     "./components.css": "./dist/styles/components.css",
     "./accents/*": "./dist/accents/*",
     "./tailwind-preset": {
@@ -43,6 +45,9 @@
     "react-dom": "^19"
   },
   "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.2.11",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/noto-serif-jp": "^5.2.8",
     "@radix-ui/react-dialog": "^1.1.0"
   },
   "devDependencies": {
