@@ -535,17 +535,16 @@
   letter-spacing: 0.05em;
 }
 
+/* The selected tab is stated by contrast and weight, not by hue: the glyph comes
+   up from --fg-faint to full --fg and the label goes bold. No accent tint, no
+   halo — six apps carry six accents, and the one that reads as a tasteful glow
+   in iris reads as a red smear in darkroom. */
 .ds-tab[aria-selected="true"] {
   color: rgb(var(--fg));
 }
 
 .ds-tab[aria-selected="true"] span {
-  color: rgb(var(--accent));
   font-weight: 700;
-}
-
-.ds-tab[aria-selected="true"] .ds-ic {
-  filter: drop-shadow(0 0 7px rgb(var(--accent) / 0.9));
 }
 
 .ds-tab:disabled {
