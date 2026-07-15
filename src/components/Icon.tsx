@@ -31,6 +31,18 @@ const ICONS = {
   heart: (
     <path d="M12 20.5C7.5 16.7 3.5 13.2 3.5 9.2c0-2.5 2-4.5 4.5-4.5 1.6 0 3.1.8 4 2.1.9-1.3 2.4-2.1 4-2.1 2.5 0 4.5 2 4.5 4.5 0 4-4 7.5-8.5 11.3z" />
   ),
+  // The fleet's More tab (see projects/CLAUDE.md). Four panes on the 24×24 grid —
+  // the shape kurumon has always used for More, which it draws with lucide's
+  // LayoutGrid. Redrawn here so the apps that own no lucide (miru, nihongo, street,
+  // fudoki) can share the same mark without pulling an icon library in for one tab.
+  grid: (
+    <>
+      <rect x="4" y="4" width="7" height="7" rx="1.6" />
+      <rect x="13" y="4" width="7" height="7" rx="1.6" />
+      <rect x="4" y="13" width="7" height="7" rx="1.6" />
+      <rect x="13" y="13" width="7" height="7" rx="1.6" />
+    </>
+  ),
   sort: <path d="M4 7h16M7 12h10M10 17h4" />,
   check: <path d="M5 12.5l4.5 4.5L19 7.5" />,
   star: <path d="M12 3.4l2.6 5.5 6 .7-4.5 4.1 1.2 5.9-5.3-3-5.3 3 1.2-5.9L3.4 9.6l6-.7z" />,
