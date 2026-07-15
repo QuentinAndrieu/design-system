@@ -37,6 +37,7 @@
     "dev": "ladle serve",
     "docs:build": "ladle build",
     "build": "tsup && cp -r src/styles dist/ && cp -r src/accents dist/",
+    "check:fonts": "node scripts/check-fonts.mjs",
     "typecheck": "tsc --noEmit",
     "prepare": "npm run build"
   },
