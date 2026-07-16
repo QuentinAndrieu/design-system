@@ -83,6 +83,12 @@ export function ConfigSheet({
   const tweenTo = useCallback(
     (target: number) => {
       if (animRef.current !== null) cancelAnimationFrame(animRef.current);
+      // No frames come in a hidden document (background tab, throttled
+      // webview) — land on the target at once instead of freezing mid-flight.
+      if (typeof document !== "undefined" && document.visibilityState === "hidden") {
+        writeP(target);
+        return;
+      }
       const from = pRef.current;
       const start = performance.now();
       const DUR = 450;
