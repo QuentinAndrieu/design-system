@@ -43,6 +43,8 @@ export { AppHeader } from "./components/AppHeader";
 export type { AppHeaderProps } from "./components/AppHeader";
 export { ParallaxSheet } from "./components/ParallaxSheet";
 export type { ParallaxSheetProps } from "./components/ParallaxSheet";
+export { ConfigSheet } from "./components/ConfigSheet";
+export type { ConfigSheetProps } from "./components/ConfigSheet";
 
 // navigation
 export { TabBar } from "./components/TabBar";

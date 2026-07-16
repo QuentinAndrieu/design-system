@@ -870,6 +870,136 @@ html:has(.ds-shell--contained) body {
   padding-bottom: 0;
 }
 
+/* ================= config sheet (IG-style studio) ================= */
+/* At rest: full-width artwork + opener pill, no sheet. Open: the artwork shrinks
+   to the space the sheet leaves (aspect-budgeted max-width), the frosted sheet
+   slides over the tab bar and scrolls internally. Dismissal is explicit only. */
+.ds-configsheet {
+  /* The sheet's height and the chrome (header + margins) above the shrunk hero —
+     both feed the hero's open-state width budget below. */
+  --ds-cs-h: min(calc(var(--app-viewport-h, 100dvh) * 0.58), 500px);
+  --ds-cs-top: 170px;
+}
+
+.ds-cs-hero {
+  width: 100%;
+  margin-inline: auto;
+  transition: max-width var(--dur) var(--ease);
+}
+
+.ds-configsheet--open .ds-cs-hero {
+  max-width: clamp(
+    140px,
+    calc((var(--app-viewport-h, 100dvh) - var(--ds-cs-h) - var(--ds-cs-top)) * var(--ds-cs-aspect, 0.75)),
+    100%
+  );
+}
+
+/* Hero furniture (toggles, action rows) that should vanish while configuring —
+   the shrunk hero is the artwork alone. */
+.ds-configsheet--open [data-cs-hide] {
+  display: none;
+}
+
+.ds-cs-open {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 14px auto 4px;
+  padding: 9px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgb(var(--fg));
+}
+
+.ds-cs-sheet {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 105%);
+  width: min(100%, var(--ds-cs-max, 28rem));
+  height: var(--ds-cs-h);
+  z-index: var(--z-sheet);
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--glass-sheet-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  transition: transform var(--dur) var(--ease);
+}
+
+.ds-configsheet--open .ds-cs-sheet {
+  transform: translate(-50%, 0);
+}
+
+.ds-cs-grip {
+  flex: none;
+  padding: 10px 0 6px;
+  cursor: grab;
+  touch-action: none;
+}
+
+.ds-cs-grip::before {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 5px;
+  margin: 0 auto;
+  border-radius: var(--radius-pill);
+  background: rgb(var(--fg) / 0.22);
+}
+
+.ds-cs-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px 8px;
+}
+
+.ds-cs-title {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+.ds-cs-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgb(var(--fg) / 0.08);
+  color: var(--fg-muted);
+}
+
+.ds-cs-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 16px calc(env(safe-area-inset-bottom) + 16px);
+}
+
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  .ds-cs-sheet {
+    background: rgb(var(--bg-raised));
+  }
+}
+
 /* ================= feedback: skeleton ================= */
 .ds-skel {
   position: relative;
