@@ -110,35 +110,59 @@ export function ConfigSheet({
     [open, set],
   );
 
-  // Grip drag: the sheet follows the finger; releasing past the threshold
-  // dismisses (the artwork transitions back to full width), else springs back.
+  // Grip drag drives the shared progress number (--ds-cs-p) per-frame, so the
+  // sheet follows the finger AND the artwork grows toward full width as it
+  // leaves — one choreography, live. Releasing past the threshold dismisses,
+  // else it springs back; either way the transition resumes from the dragged
+  // value (the inline var is cleared a frame after the class flips).
   const dragY = useRef<number | null>(null);
+  const settle = useCallback(
+    (next: boolean) => {
+      const root = rootRef.current;
+      if (!root) return;
+      root.classList.remove("ds-configsheet--drag");
+      if (!next) set(false);
+      requestAnimationFrame(() => {
+        root.style.removeProperty("--ds-cs-p");
+      });
+    },
+    [set],
+  );
   const onGripDown = (e: PointerEvent<HTMLDivElement>) => {
     dragY.current = e.clientY;
-    const el = sheetRef.current;
-    if (el) el.style.transition = "none";
+    rootRef.current?.classList.add("ds-configsheet--drag");
     e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onGripMove = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
+    const sheetH = sheetRef.current?.offsetHeight ?? 1;
     const dy = Math.max(0, e.clientY - dragY.current);
-    const el = sheetRef.current;
-    if (el) el.style.transform = `translate(-50%, ${dy}px)`;
+    const p = Math.max(0, 1 - dy / sheetH);
+    rootRef.current?.style.setProperty("--ds-cs-p", String(p));
   };
   const onGripUp = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
+    const sheetH = sheetRef.current?.offsetHeight ?? 1;
     const dy = Math.max(0, e.clientY - dragY.current);
     dragY.current = null;
-    const el = sheetRef.current;
-    if (!el) return;
-    el.style.transition = "";
-    const threshold = el.offsetHeight * DISMISS_RATIO;
-    if (dy > threshold) set(false);
-    // Let the class rule take over from the dragged position on the next frame.
-    requestAnimationFrame(() => {
-      el.style.transform = "";
-    });
+    settle(dy <= sheetH * DISMISS_RATIO);
   };
+  const onGripCancel = () => {
+    if (dragY.current === null) return;
+    dragY.current = null;
+    settle(true);
+  };
+
+  // Safety net: whatever interrupted a drag (lost pointer, Escape, ✕ mid-drag),
+  // an open/close flip always clears the drag remnants so no stuck in-between
+  // state can survive.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    dragY.current = null;
+    root.classList.remove("ds-configsheet--drag");
+    root.style.removeProperty("--ds-cs-p");
+  }, [open]);
 
   return (
     <div
@@ -149,12 +173,17 @@ export function ConfigSheet({
       <div className="ds-cs-hero" onClickCapture={onHeroClickCapture}>
         {hero}
       </div>
-      {!open && (
-        <button type="button" className="ds-cs-open" onClick={() => set(true)}>
-          <Icon name="set" size={15} />
-          {openLabel}
-        </button>
-      )}
+      {/* Always mounted — it fades with the choreography (opacity from
+          --ds-cs-p) and grows back in as a closing drag progresses. */}
+      <button
+        type="button"
+        className="ds-cs-open"
+        tabIndex={open ? -1 : 0}
+        onClick={() => !open && set(true)}
+      >
+        <Icon name="set" size={15} />
+        {openLabel}
+      </button>
       <div
         ref={sheetRef}
         className={className ? `ds-cs-sheet ${className}` : "ds-cs-sheet"}
@@ -166,6 +195,7 @@ export function ConfigSheet({
           onPointerDown={onGripDown}
           onPointerMove={onGripMove}
           onPointerUp={onGripUp}
+          onPointerCancel={onGripCancel}
         />
         <div className="ds-cs-head">
           <span className="ds-cs-title">{title ?? openLabel}</span>

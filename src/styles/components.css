@@ -873,26 +873,48 @@ html:has(.ds-shell--contained) body {
 /* ================= config sheet (IG-style studio) ================= */
 /* At rest: full-width artwork + opener pill, no sheet. Open: the artwork shrinks
    to the space the sheet leaves (aspect-budgeted max-width), the frosted sheet
-   slides over the tab bar and scrolls internally. Dismissal is explicit only. */
+   slides over the tab bar and scrolls internally. Dismissal is explicit only.
+
+   Everything — sheet position, hero width, pill fade — derives from ONE number,
+   the registered custom property --ds-cs-p (0 = rest, 1 = configuring). The
+   class toggles it and the transition tweens it, so open plays as one slow
+   choreography; a grip drag sets it inline per-frame, so the artwork grows
+   under the finger exactly as the sheet leaves (the IG/TikTok feel). A plain
+   max-width toggle can't do either: none ↔ clamp() isn't interpolable — the
+   artwork snapped. */
+@property --ds-cs-p {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
 .ds-configsheet {
   /* The sheet's height and the chrome (header + margins) above the shrunk hero —
      both feed the hero's open-state width budget below. */
   --ds-cs-h: min(calc(var(--app-viewport-h, 100dvh) * 0.58), 500px);
   --ds-cs-top: 170px;
+  --ds-cs-open-w: clamp(
+    140px,
+    calc((var(--app-viewport-h, 100dvh) - var(--ds-cs-h) - var(--ds-cs-top)) * var(--ds-cs-aspect, 0.75)),
+    100%
+  );
+  --ds-cs-p: 0;
+  transition: --ds-cs-p 0.45s cubic-bezier(0.22, 0.9, 0.26, 1);
+}
+
+.ds-configsheet--open {
+  --ds-cs-p: 1;
+}
+
+/* While the finger drives it, the number must not tween. */
+.ds-configsheet--drag {
+  transition: none;
 }
 
 .ds-cs-hero {
   width: 100%;
   margin-inline: auto;
-  transition: max-width var(--dur) var(--ease);
-}
-
-.ds-configsheet--open .ds-cs-hero {
-  max-width: clamp(
-    140px,
-    calc((var(--app-viewport-h, 100dvh) - var(--ds-cs-h) - var(--ds-cs-top)) * var(--ds-cs-aspect, 0.75)),
-    100%
-  );
+  max-width: calc(100% - (100% - var(--ds-cs-open-w)) * var(--ds-cs-p));
 }
 
 /* Hero furniture (toggles, action rows) that should vanish while configuring —
@@ -915,13 +937,19 @@ html:has(.ds-shell--contained) body {
   font-size: 13px;
   font-weight: 600;
   color: rgb(var(--fg));
+  /* Fades with the choreography — and back in as a closing drag progresses. */
+  opacity: calc(1 - var(--ds-cs-p));
+}
+
+.ds-configsheet--open .ds-cs-open {
+  pointer-events: none;
 }
 
 .ds-cs-sheet {
   position: fixed;
   left: 50%;
   bottom: 0;
-  transform: translate(-50%, 105%);
+  transform: translate(-50%, calc((1 - var(--ds-cs-p)) * 105%));
   width: min(100%, var(--ds-cs-max, 28rem));
   height: var(--ds-cs-h);
   z-index: var(--z-sheet);
@@ -932,11 +960,6 @@ html:has(.ds-shell--contained) body {
   background: var(--glass-sheet-bg);
   -webkit-backdrop-filter: blur(20px) saturate(150%);
   backdrop-filter: blur(20px) saturate(150%);
-  transition: transform var(--dur) var(--ease);
-}
-
-.ds-configsheet--open .ds-cs-sheet {
-  transform: translate(-50%, 0);
 }
 
 .ds-cs-grip {
