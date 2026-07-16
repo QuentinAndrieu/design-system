@@ -16,24 +16,6 @@ export const Japanese = () => (
   </div>
 );
 
-export const WithArt = () => (
-  <div style={{ maxWidth: 440 }}>
-    <AppHeader
-      label="日本語"
-      lang="ja"
-      title="Library"
-      art={
-        <svg viewBox="0 0 60 60" aria-hidden>
-          <rect x="8" y="14" width="6" height="40" fill="var(--fg-faint)" />
-          <rect x="46" y="14" width="6" height="40" fill="var(--fg-faint)" />
-          <rect x="2" y="8" width="56" height="7" rx="2" fill="rgb(var(--accent))" />
-          <rect x="8" y="24" width="44" height="5" fill="var(--fg-faint)" />
-        </svg>
-      }
-    />
-  </div>
-);
-
 export const WithActions = () => (
   <div style={{ maxWidth: 440 }}>
     <AppHeader

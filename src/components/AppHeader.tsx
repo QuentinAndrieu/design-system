@@ -12,12 +12,6 @@ export interface AppHeaderProps {
   title: ReactNode;
   /** Optional right-aligned screen actions. Never navigation — tabs live in the TabBar. */
   actions?: ReactNode;
-  /**
-   * Decorative art on the right edge, stretched to the header's full height and
-   * bottom-anchored (nihongo's tab illustrations ride here). Purely visual —
-   * it's aria-hidden and takes no pointer events.
-   */
-  art?: ReactNode;
   /** App-side spacing tweaks (e.g. matching the app's own content padding). */
   className?: string;
 }
@@ -27,7 +21,10 @@ export interface AppHeaderProps {
  * Rendered by `AppShell` via its `appHeader` slot so it scrolls with the content —
  * it is a page block, not pinned chrome.
  */
-export function AppHeader({ label, lang, title, actions, art, className }: AppHeaderProps) {
+// Decorative per-screen art is NOT a header concern — it lives on the shell's
+// ambient layer (AppShell `ambient` slot), where it can run large behind the
+// content (nihongo's tab illustrations do exactly that).
+export function AppHeader({ label, lang, title, actions, className }: AppHeaderProps) {
   return (
     <header className={["ds-apphead", className].filter(Boolean).join(" ")}>
       <div className="ds-apphead__text">
@@ -37,11 +34,6 @@ export function AppHeader({ label, lang, title, actions, art, className }: AppHe
         <h1 className="ds-apphead__title">{title}</h1>
       </div>
       {actions ? <div className="ds-apphead__actions">{actions}</div> : null}
-      {art ? (
-        <div className="ds-apphead__art" aria-hidden>
-          {art}
-        </div>
-      ) : null}
     </header>
   );
 }
