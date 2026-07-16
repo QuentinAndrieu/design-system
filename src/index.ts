@@ -91,8 +91,7 @@ export { ErrorBox } from "./components/ErrorBox";
 export type { ErrorBoxProps } from "./components/ErrorBox";
 export { Toast } from "./components/Toast";
 export type { ToastProps } from "./components/Toast";
-export { ToastProvider, useToast } from "./components/ToastProvider";
-export type { ToastProviderProps } from "./components/ToastProvider";
+export { Toaster, toast } from "./components/ToastProvider";
 
 // stats
 export { StatTile, StatGrid } from "./components/Stat";

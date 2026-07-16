@@ -1,48 +1,42 @@
-"use client";
-
-import { createContext, useCallback, useContext, useRef, useState } from "react";
+import { useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
 import { Toast } from "./Toast";
 
-type ShowToast = (message: ReactNode) => void;
+// A module-scope store instead of React context: the DS bundle is evaluated by
+// server components too (every app's layout imports AppShell), and a top-level
+// createContext would crash the react-server condition. This keeps the whole
+// package RSC-safe and makes `toast()` callable from any event handler.
+type Entry = { message: ReactNode; key: number } | null;
 
-const ToastContext = createContext<ShowToast | null>(null);
+let current: Entry = null;
+let timer: ReturnType<typeof setTimeout> | null = null;
+const listeners = new Set<() => void>();
 
-export interface ToastProviderProps {
-  children: ReactNode;
-  /** How long a toast stays up. */
-  durationMs?: number;
+const emit = () => listeners.forEach((l) => l());
+const subscribe = (l: () => void) => {
+  listeners.add(l);
+  return () => {
+    listeners.delete(l);
+  };
+};
+
+/** Show a toast. Latest message wins; one on screen at a time, auto-dismissed. */
+export function toast(message: ReactNode, durationMs = 2600) {
+  if (timer) clearTimeout(timer);
+  current = { message, key: Date.now() };
+  timer = setTimeout(() => {
+    current = null;
+    emit();
+  }, durationMs);
+  emit();
 }
 
 /**
- * Turnkey toast state over the presentational `Toast`: latest message wins, one
- * on screen at a time, auto-dismissed. Mount once (next to `AppShell`), then
- * `useToast()` anywhere below it.
+ * Renders whatever `toast()` was last called with. Mount it once, inside any
+ * client component (next to the app's TabBar adapter is the fleet spot) —
+ * it holds client state, so not directly in a server layout.
  */
-export function ToastProvider({ children, durationMs = 2600 }: ToastProviderProps) {
-  const [toast, setToast] = useState<{ message: ReactNode; key: number } | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const show = useCallback<ShowToast>(
-    (message) => {
-      if (timer.current) clearTimeout(timer.current);
-      setToast({ message, key: Date.now() });
-      timer.current = setTimeout(() => setToast(null), durationMs);
-    },
-    [durationMs],
-  );
-
-  return (
-    <ToastContext.Provider value={show}>
-      {children}
-      {toast ? <Toast key={toast.key}>{toast.message}</Toast> : null}
-    </ToastContext.Provider>
-  );
-}
-
-/** The `show(message)` function from the nearest `ToastProvider`. */
-export function useToast(): ShowToast {
-  const show = useContext(ToastContext);
-  if (!show) throw new Error("useToast() needs a <ToastProvider> above it");
-  return show;
+export function Toaster() {
+  const entry = useSyncExternalStore(subscribe, () => current, () => null);
+  return entry ? <Toast key={entry.key}>{entry.message}</Toast> : null;
 }

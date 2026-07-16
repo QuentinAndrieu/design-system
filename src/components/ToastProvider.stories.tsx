@@ -1,15 +1,11 @@
 import { Button } from "./Button";
-import { ToastProvider, useToast } from "./ToastProvider";
+import { Toaster, toast } from "./ToastProvider";
 
-export default { title: "Components / ToastProvider" };
-
-function Demo() {
-  const toast = useToast();
-  return <Button onClick={() => toast("Backup downloaded")}>Show a toast</Button>;
-}
+export default { title: "Components / Toaster" };
 
 export const Default = () => (
-  <ToastProvider>
-    <Demo />
-  </ToastProvider>
+  <>
+    <Button onClick={() => toast("Backup downloaded")}>Show a toast</Button>
+    <Toaster />
+  </>
 );
