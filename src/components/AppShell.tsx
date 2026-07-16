@@ -29,10 +29,18 @@ export interface AppShellProps {
    */
   scroll?: "fixed" | "contained" | "page";
   /**
-   * Optional region pinned above the content (e.g. a top bar). Stays put while a
+   * Optional region pinned above the content (e.g. a toolbar). Stays put while a
    * `contained` shell's content scrolls beneath it.
    */
   header?: ReactNode;
+  /**
+   * The fleet header — an `<AppHeader>` (accent app label + section title).
+   * Rendered as the first block INSIDE the content region, so it scrolls away
+   * with the page in `page`/`contained` shells (fudoki's feel). In a `fixed`
+   * shell the screens own the scroll, so it sits statically above them —
+   * screens that want it to scroll can render `<AppHeader>` themselves instead.
+   */
+  appHeader?: ReactNode;
   /**
    * Optional region below the content, in flow (e.g. an editorial site footer).
    * When present in `page` mode it carries the tab-bar clearance so the floating
@@ -68,6 +76,7 @@ export function AppShell({
   scroll = "fixed",
   ambient,
   header,
+  appHeader,
   footer,
   maxWidth,
   className,
@@ -88,6 +97,7 @@ export function AppShell({
         ref={contentRef}
         className={className ? `ds-shell-content ${className}` : "ds-shell-content"}
       >
+        {appHeader}
         {children}
       </main>
       {footer != null && <div className="ds-shell-footer">{footer}</div>}

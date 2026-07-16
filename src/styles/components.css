@@ -374,6 +374,90 @@
   flex: none;
 }
 
+.ds-row__chev {
+  flex: none;
+  color: var(--fg-faint);
+}
+
+button.ds-row:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ================= settings group (labelled card of rows) ================= */
+.ds-grouplabel {
+  padding: 0 4px;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+}
+
+/* group + label spacing: a label directly above a group hugs it */
+.ds-setgroup {
+  padding: 3px;
+  overflow: hidden;
+}
+
+.ds-setgroup > * + * {
+  border-top: 1px solid var(--glass-border);
+}
+
+/* ================= search field (glass pill) ================= */
+.ds-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 13px;
+  height: var(--ctl-h);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: rgb(var(--fg) / 0.05);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.ds-search:focus-within {
+  border-color: rgb(var(--accent));
+}
+
+.ds-search__ic {
+  flex: none;
+  color: var(--fg-faint);
+}
+
+.ds-search__input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 13.5px;
+  color: rgb(var(--fg));
+}
+
+.ds-search__input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.ds-search__input::placeholder {
+  color: var(--fg-faint);
+}
+
+.ds-search__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--fg-muted);
+  background: rgb(var(--fg) / 0.08);
+}
+
 /* ================= thumbnail / poster ================= */
 .ds-thumb {
   position: relative;
@@ -1170,69 +1254,48 @@ html:has(.ds-shell--contained) body {
   left: 20px;
 }
 
-/* ================= app bar (pinned glass top chrome) ================= */
-.ds-appbar {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-tabbar);
+/* ================= app header (the fleet header — fudoki's shape) ================= */
+/* A page block, not pinned chrome: it scrolls with the content. The accent label
+   is what tells the six apps apart; the title is the current section's. */
+.ds-apphead {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: calc(env(safe-area-inset-top) + 10px) 16px 12px;
-  background: var(--glass-panel-bg);
-  border-bottom: 1px solid var(--glass-border);
-  backdrop-filter: var(--glass-panel-filter);
-  -webkit-backdrop-filter: var(--glass-panel-filter);
-}
-
-/* main row: back/leading · title · actions */
-.ds-appbar__row {
-  display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
+  padding: 8px 4px 4px;
+  margin-bottom: 12px;
 }
 
-/* optional sub-row under the bar (e.g. a segmented sub-nav) */
-.ds-appbar__below {
-  display: flex;
-}
-
-.ds-appbar__side {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 44px;
-}
-
-.ds-appbar__side--end {
-  justify-content: flex-end;
-}
-
-.ds-appbar__center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.ds-apphead__text {
   min-width: 0;
 }
 
-.ds-appbar__title {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.ds-appbar__sub {
-  font-size: 12px;
-  color: var(--fg-muted);
-}
-
-.ds-appbar__back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.ds-apphead__label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
   color: rgb(var(--accent));
-  font-size: 14px;
+}
+
+/* Japan-subject apps label themselves in Japanese (風土記, 日本語) */
+.ds-apphead__label:lang(ja) {
+  font-family: var(--font-jp);
+}
+
+.ds-apphead__title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.ds-apphead__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 4px;
+  flex: none;
 }
 
 /* ================= modal (centered dialog) ================= */

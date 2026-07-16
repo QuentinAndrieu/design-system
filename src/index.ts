@@ -31,18 +31,22 @@ export { Thumbnail } from "./components/Thumbnail";
 export type { ThumbnailProps } from "./components/Thumbnail";
 export { Row } from "./components/Row";
 export type { RowProps } from "./components/Row";
+export { GroupLabel } from "./components/GroupLabel";
+export type { GroupLabelProps } from "./components/GroupLabel";
+export { SettingsGroup } from "./components/SettingsGroup";
+export type { SettingsGroupProps } from "./components/SettingsGroup";
 
 // layout
 export { AppShell } from "./components/AppShell";
 export type { AppShellProps } from "./components/AppShell";
+export { AppHeader } from "./components/AppHeader";
+export type { AppHeaderProps } from "./components/AppHeader";
 export { ParallaxSheet } from "./components/ParallaxSheet";
 export type { ParallaxSheetProps } from "./components/ParallaxSheet";
 
 // navigation
 export { TabBar } from "./components/TabBar";
 export type { TabBarProps, Tab } from "./components/TabBar";
-export { TopBar } from "./components/TopBar";
-export type { TopBarProps } from "./components/TopBar";
 export { SegmentedControl } from "./components/SegmentedControl";
 export type {
   SegmentedControlProps,
@@ -54,6 +58,8 @@ export type { WeekStripProps, WeekDay } from "./components/WeekStrip";
 // inputs
 export { Field } from "./components/Field";
 export type { FieldProps } from "./components/Field";
+export { SearchField } from "./components/SearchField";
+export type { SearchFieldProps } from "./components/SearchField";
 export { Dropdown } from "./components/Dropdown";
 export type { DropdownProps, DropdownOption } from "./components/Dropdown";
 export { MultiSelect } from "./components/MultiSelect";
@@ -85,6 +91,8 @@ export { ErrorBox } from "./components/ErrorBox";
 export type { ErrorBoxProps } from "./components/ErrorBox";
 export { Toast } from "./components/Toast";
 export type { ToastProps } from "./components/Toast";
+export { ToastProvider, useToast } from "./components/ToastProvider";
+export type { ToastProviderProps } from "./components/ToastProvider";
 
 // stats
 export { StatTile, StatGrid } from "./components/Stat";
