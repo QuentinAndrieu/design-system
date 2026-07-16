@@ -22,8 +22,11 @@ function getScrollParent(node: HTMLElement | null): HTMLElement | null {
   return null;
 }
 
-/** Dragging the grip past this slice of the sheet's height dismisses it. */
+/** Dragging the grip past this slice of the sheet's travel settles it the other way. */
 const DISMISS_RATIO = 0.22;
+
+/** Pointer slop under which a grip drag counts as a tap, not a drag. */
+const TAP_SLOP = 6;
 
 export interface ConfigSheetProps {
   /** The artwork — full column width at rest, shrunk to the top while configuring. */
@@ -46,6 +49,28 @@ export interface ConfigSheetProps {
   className?: string;
   /** Notifies the app when the sheet opens/closes (e.g. to pause previews). */
   onOpenChange?: (open: boolean) => void;
+  /**
+   * The shell the studio sits in.
+   *
+   * `inline` (default) keeps it in the app's content column, under the app's
+   * own header and above its tab bar.
+   *
+   * `fullscreen` gives the artwork the whole viewport: the action row floats
+   * over it, and the sheet rests as a peeking handle you drag up rather than
+   * hiding offscreen. The app MUST drop its own header + tab bar to match
+   * (kurumon's `isFullBleed`) — this variant paints over both.
+   */
+  variant?: "inline" | "fullscreen";
+  /**
+   * Leave the studio (`fullscreen` only, where it is REQUIRED in practice: with
+   * the tab bar gone there is no other way out, so a fullscreen studio without
+   * it traps you).
+   */
+  onExit?: () => void;
+  /** Accessible name of the exit button (i18n). */
+  exitLabel?: string;
+  /** Label on the resting handle (`fullscreen` only). Defaults to `openLabel`. */
+  restLabel?: string;
 }
 
 /**
@@ -69,9 +94,16 @@ export function ConfigSheet({
   aspect = 0.75,
   className,
   onOpenChange,
+  variant = "inline",
+  onExit,
+  exitLabel,
+  restLabel,
 }: ConfigSheetProps) {
+  const full = variant === "fullscreen";
   const rootRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const gripRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
 
   // The single choreography number (0 = rest, 1 = configuring), tweened by a
@@ -128,14 +160,36 @@ export function ConfigSheet({
   const measureOpenW = useCallback(() => {
     const root = rootRef.current;
     const sheet = sheetRef.current;
-    if (!root || !sheet) return;
+    const stage = stageRef.current;
+    if (!root || !sheet || !stage) return;
+    if (full) {
+      // Ask the stage what the free box will BE once open, rather than deriving it
+      // from the viewport: the pads already encode the sheet, the peek, the gap and
+      // the safe area, and re-deriving that here is how the two drift apart. They
+      // lerp on --ds-cs-p, though, so pin it to the far end for the read — otherwise
+      // a measure taken at rest (or mid-drag, from the grip) budgets against the
+      // wrong box and the artwork lands the wrong size.
+      const prevP = pRef.current;
+      root.style.setProperty("--ds-cs-p", "1");
+      const cs = getComputedStyle(stage);
+      const padY = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
+      const padX = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
+      const freeH = stage.clientHeight - padY;
+      const cap = stage.clientWidth - padX;
+      root.style.setProperty("--ds-cs-p", String(prevP));
+      // Fill the free box's height; the width only binds on a viewport wide and
+      // short enough that a full-height artwork wouldn't fit across.
+      const w = Math.max(140, Math.min(freeH * aspect, cap));
+      root.style.setProperty("--ds-cs-open-w", `${Math.round(w)}px`);
+      return;
+    }
     const scroller = getScrollParent(root);
     const scrolled = scroller ? scroller.scrollTop : window.scrollY;
     const chrome = root.getBoundingClientRect().top + scrolled;
     const budget = (window.innerHeight - sheet.offsetHeight - chrome - 12) * aspect;
     const w = Math.max(140, Math.min(budget, root.clientWidth));
     root.style.setProperty("--ds-cs-open-w", `${Math.round(w)}px`);
-  }, [aspect]);
+  }, [aspect, full]);
 
   // While open: bring the artwork to the top, freeze the page behind the sheet,
   // track resizes, close on Escape. The scroller is the contained shell's
@@ -145,7 +199,9 @@ export function ConfigSheet({
     measureOpenW();
     tweenTo(1);
     const scroller = getScrollParent(rootRef.current);
-    (scroller ?? window).scrollTo({ top: 0, behavior: "smooth" });
+    // A fullscreen studio has nothing to bring into view — it IS the viewport,
+    // and the artwork is parked by the stage, not by scrolling to it.
+    if (!full) (scroller ?? window).scrollTo({ top: 0, behavior: "smooth" });
     const lockEl = scroller ?? document.documentElement;
     const prev = lockEl.style.overflow;
     lockEl.style.overflow = "hidden";
@@ -159,7 +215,7 @@ export function ConfigSheet({
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("resize", measureOpenW);
     };
-  }, [open, set, measureOpenW]);
+  }, [open, set, measureOpenW, full]);
 
   // Tap the artwork to dismiss (only while open); controls marked
   // `data-no-collapse` keep working.
@@ -176,43 +232,78 @@ export function ConfigSheet({
 
   // Grip drag writes the shared progress number per-frame, so the sheet
   // follows the finger AND the artwork grows toward full width as it leaves —
-  // one choreography, live. Releasing past the threshold dismisses (the tween
-  // finishes the close from wherever the finger left off), else springs back.
+  // one choreography, live. Reckoned from wherever the drag STARTED rather than
+  // from "open", because fullscreen drags the other way: up, from rest.
+  // The distance the sheet can travel: inline it leaves entirely, fullscreen
+  // stops at the peeking handle. Measured off the grip so the CSS peek (which
+  // carries a safe-area term, i.e. no parseable px value) stays the source of truth.
   const dragY = useRef<number | null>(null);
+  const dragFromP = useRef(0);
+  // Land on a state, whether or not `open` already agrees: flipping it runs the
+  // open effect (which tweens), so only tween here when it wouldn't fire.
+  const settle = (toOpen: boolean) => {
+    if (toOpen === open) tweenTo(toOpen ? 1 : 0);
+    else set(toOpen);
+  };
+  const travel = () => {
+    const sheetH = sheetRef.current?.offsetHeight ?? 1;
+    const peek = full ? (gripRef.current?.offsetHeight ?? 0) : 0;
+    return Math.max(1, sheetH - peek);
+  };
   const onGripDown = (e: PointerEvent<HTMLDivElement>) => {
     if (animRef.current !== null) cancelAnimationFrame(animRef.current);
+    // Measure now, not on open: dragging up from rest must shrink the artwork
+    // under the finger, and the open effect hasn't run yet.
+    measureOpenW();
     dragY.current = e.clientY;
+    dragFromP.current = pRef.current;
     e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onGripMove = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
-    const sheetH = sheetRef.current?.offsetHeight ?? 1;
-    const dy = Math.max(0, e.clientY - dragY.current);
-    writeP(Math.max(0, 1 - dy / sheetH));
+    const up = dragY.current - e.clientY;
+    writeP(Math.max(0, Math.min(1, dragFromP.current + up / travel())));
   };
   const onGripUp = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
-    const sheetH = sheetRef.current?.offsetHeight ?? 1;
-    const dy = Math.max(0, e.clientY - dragY.current);
+    const moved = Math.abs(e.clientY - dragY.current);
+    const from = dragFromP.current;
     dragY.current = null;
-    if (dy > sheetH * DISMISS_RATIO) set(false);
-    else tweenTo(1);
+    // A tap on the handle toggles — the whole point of a resting handle. Inline
+    // keeps its old no-op-on-tap behaviour (its grip only exists while open).
+    if (moved < TAP_SLOP) {
+      if (full) settle(!open);
+      else tweenTo(1);
+      return;
+    }
+    // Hysteresis from the starting end, so a short flick either way commits.
+    settle(from > 0.5 ? pRef.current >= 1 - DISMISS_RATIO : pRef.current > DISMISS_RATIO);
   };
   const onGripCancel = () => {
     if (dragY.current === null) return;
     dragY.current = null;
-    tweenTo(1);
+    settle(dragFromP.current > 0.5);
   };
+
+  const cls = ["ds-configsheet"];
+  if (full) cls.push("ds-configsheet--full");
+  if (open) cls.push("ds-configsheet--open");
 
   return (
     <div
       ref={rootRef}
-      className={open ? "ds-configsheet ds-configsheet--open" : "ds-configsheet"}
+      className={cls.join(" ")}
       style={{ "--ds-cs-aspect": aspect } as CSSProperties}
     >
       {/* The screen's action row + the configure opener, kurumon's top-row
-          shape — hidden (data-cs-hide) while the sheet is open. */}
+          shape — hidden (data-cs-hide) while the sheet is open; fullscreen
+          floats this over the artwork and fades it with the drag instead. */}
       <div className="ds-cs-bar" data-cs-hide>
+        {full && onExit && (
+          <button type="button" className="ds-cs-exit" aria-label={exitLabel} title={exitLabel} onClick={onExit}>
+            <Icon name="back" size={18} />
+          </button>
+        )}
         <div className="ds-cs-bar-tools">{toolbar}</div>
         <button
           type="button"
@@ -224,8 +315,13 @@ export function ConfigSheet({
           <Icon name="set" size={16} />
         </button>
       </div>
-      <div className="ds-cs-hero" onClickCapture={onHeroClickCapture}>
-        {hero}
+      {/* The box the artwork centres in. Inline it is an inert wrapper; fullscreen
+          it is the whole free area, and lerping its bottom pad is what walks the
+          artwork from centred to parked above the sheet. */}
+      <div className="ds-cs-stage" ref={stageRef}>
+        <div className="ds-cs-hero" onClickCapture={onHeroClickCapture}>
+          {hero}
+        </div>
       </div>
       <div
         ref={sheetRef}
@@ -233,13 +329,17 @@ export function ConfigSheet({
         aria-hidden={!open}
       >
         <div
+          ref={gripRef}
           className="ds-cs-grip"
           aria-hidden
           onPointerDown={onGripDown}
           onPointerMove={onGripMove}
           onPointerUp={onGripUp}
           onPointerCancel={onGripCancel}
-        />
+        >
+          {/* Fullscreen rests ON the handle, so it has to say what it opens. */}
+          {full && <span className="ds-cs-rest">{restLabel ?? openLabel}</span>}
+        </div>
         {/* Title only — dismissal is the grip, the artwork, or Escape. */}
         <div className="ds-cs-head">
           <span className="ds-cs-title">{title ?? openLabel}</span>

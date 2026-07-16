@@ -871,9 +871,12 @@ html:has(.ds-shell--contained) body {
 }
 
 /* ================= config sheet (IG-style studio) ================= */
-/* At rest: full-width artwork + opener pill, no sheet. Open: the artwork shrinks
-   to the space the sheet leaves (aspect-budgeted max-width), the frosted sheet
-   slides over the tab bar and scrolls internally. Dismissal is explicit only.
+/* Two shells, one choreography (see the --full block at the end of this section):
+   `inline` sits in the app's column — at rest, full-width artwork + opener pill and
+   no sheet; open, the artwork shrinks to the space the sheet leaves
+   (aspect-budgeted max-width) and the frosted sheet slides over the tab bar.
+   `fullscreen` takes the viewport instead, and rests on a peeking handle.
+   Both scroll the sheet internally and dismiss explicitly only.
 
    Everything — sheet position, hero width, pill fade — derives from ONE number,
    the custom property --ds-cs-p (0 = rest, 1 = configuring). The COMPONENT
@@ -909,8 +912,9 @@ html:has(.ds-shell--contained) body {
 }
 
 /* Hero furniture (toggles, action rows) that should vanish while configuring —
-   the shrunk hero is the artwork alone. */
-.ds-configsheet--open [data-cs-hide] {
+   the shrunk hero is the artwork alone. Fullscreen fades it on --ds-cs-p instead
+   (below), so the :not() keeps this hard cut off its back. */
+.ds-configsheet--open:not(.ds-configsheet--full) [data-cs-hide] {
   display: none;
 }
 
@@ -933,7 +937,10 @@ html:has(.ds-shell--contained) body {
   gap: 8px;
 }
 
-.ds-cs-fab {
+/* The opener, and (fullscreen only) the way out — same glass disc, opposite ends
+   of the same bar, so they read as a pair rather than two unrelated affordances. */
+.ds-cs-fab,
+.ds-cs-exit {
   flex: none;
   display: flex;
   align-items: center;
@@ -1013,6 +1020,117 @@ html:has(.ds-shell--contained) body {
   .ds-cs-sheet {
     background: rgb(var(--bg-raised));
   }
+}
+
+/* ---------- fullscreen studio ----------
+   The artwork owns the whole screen: no app header, no tab bar (the app must
+   drop both — kurumon's isFullBleed). The action row floats over the artwork and
+   the sheet rests as a peeking handle. Same --ds-cs-p as the inline shell, so the
+   icons fade and the artwork shrinks UNDER THE FINGER as the handle is dragged up. */
+.ds-configsheet--full {
+  position: fixed;
+  inset: 0;
+  /* Above the shell's ambient wash, below every modal: an app's cropper/dialog
+     sits at --z-sheet (50) and MUST still cover a studio opened underneath it. */
+  z-index: 1;
+  /* svh, not the inline shell's %: the stage lerps its padding-bottom toward this,
+     and a % padding would resolve against the WIDTH. The sheet reads it as a height
+     either way, so scoping the override here leaves the inline shell untouched.
+     No px cap — the inline shell's min(…, 500px) exists to stop a sheet swallowing a
+     tall desktop column, but here the sheet IS the screen and 70% must stay 70%. */
+  --ds-cs-h: 70svh;
+  /* The handle keeps its full target height above the home indicator. Carries a
+     safe-area term, so it has no parseable px value — the component measures the
+     grip's box instead of reading this back. */
+  --ds-cs-peek: calc(58px + env(safe-area-inset-bottom));
+  --ds-cs-inset: 12px;
+  /* Breathing room between the parked artwork and the sheet. */
+  --ds-cs-gap: 12px;
+}
+
+/* The free box between the floating bar and the sheet. The hero CENTRES in it, so
+   lerping the pads is the entire "artwork walks from optically centred to parked at
+   the top" move — no second position to keep in sync with the width lerp. Once the
+   artwork is budgeted to fill this box's HEIGHT (which it is on any portrait phone),
+   centring and top-parking are the same thing, and it degrades to centred on a
+   viewport wide enough for the width to bind instead.
+
+   Both pads use the additive `A + (B - A) * p` lerp — see the hero's max-width note
+   on why not the `A - (A - B) * p` form. */
+.ds-configsheet--full .ds-cs-stage {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--ds-cs-inset);
+  /* Rest reserves the floating bar's band; open releases it to a thin margin, because
+     the bar has faded by then — that reservation is what held the artwork off the top. */
+  padding-top: calc(
+    env(safe-area-inset-top) + 56px + (var(--ds-cs-gap) - 56px) * var(--ds-cs-p)
+  );
+  padding-bottom: calc(
+    var(--ds-cs-peek) +
+      ((var(--ds-cs-h) + var(--ds-cs-gap)) - var(--ds-cs-peek)) * var(--ds-cs-p)
+  );
+}
+
+.ds-configsheet--full .ds-cs-bar {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 6px);
+  left: var(--ds-cs-inset);
+  right: var(--ds-cs-inset);
+  z-index: 2;
+  padding: 0;
+}
+
+/* The exit takes the left end; the tools + opener close ranks on the right. */
+.ds-configsheet--full .ds-cs-bar-tools {
+  flex: 0 1 auto;
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.ds-configsheet--full [data-cs-hide] {
+  opacity: clamp(0, calc(1 - var(--ds-cs-p) * 1.9), 1);
+  transform: translateY(calc(var(--ds-cs-p) * -10px));
+}
+
+/* Faded to nothing well before p=1 — don't leave an invisible tap target over the artwork. */
+.ds-configsheet--full.ds-configsheet--open [data-cs-hide] {
+  pointer-events: none;
+}
+
+/* Rests at the peek line instead of leaving entirely. */
+.ds-configsheet--full .ds-cs-sheet {
+  transform: translate(-50%, calc((1 - var(--ds-cs-p)) * (100% - var(--ds-cs-peek))));
+}
+
+/* At rest the handle is the ONLY affordance for the sheet, so it gets a real
+   target and says what it opens. */
+.ds-configsheet--full .ds-cs-grip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: var(--ds-cs-peek);
+  padding: 0 0 env(safe-area-inset-bottom);
+}
+
+.ds-cs-rest {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  /* Gone by a third of the way up, as the sheet's own title takes over. */
+  opacity: clamp(0, calc(1 - var(--ds-cs-p) * 3), 1);
+}
+
+.ds-configsheet--full .ds-cs-head {
+  opacity: clamp(0, calc((var(--ds-cs-p) - 0.55) / 0.45), 1);
 }
 
 /* ================= feedback: skeleton ================= */
