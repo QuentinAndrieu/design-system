@@ -1,0 +1,23 @@
+/* shu (朱) — torii vermillion with a deeper lacquer partner. The one accent whose
+   hue shifts between themes rather than just its partners: dark runs brighter, so
+   the vermillion still reads as vermillion against a charcoal ground instead of
+   sinking into it. (The hue fudoki happens to use, but the preset doesn't know
+   that.) */
+:root,
+[data-theme="dark"] {
+  --accent: 208 84 60;
+  --accent-2: 224 108 84;
+  --accent-focus: 224 120 96;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(208, 84, 60, 0.14);
+  --accent-grad: linear-gradient(120deg, #d0543c, #b23a28 55%, #8f2f22);
+}
+
+[data-theme="light"] {
+  --accent: 178 58 40;
+  --accent-2: 148 46 34;
+  --accent-focus: 148 46 34;
+  --accent-ink: 255 255 255;
+  --accent-wash: rgba(178, 58, 40, 0.1);
+  --accent-grad: linear-gradient(120deg, #b23a28, #c5482f 55%, #d0664f);
+}

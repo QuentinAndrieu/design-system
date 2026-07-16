@@ -23,7 +23,7 @@ npm i @quentinandrieu/design-system
 
 ```tsx
 import "@quentinandrieu/design-system/styles.css";       // tokens + base + components
-import "@quentinandrieu/design-system/accents/iris.css"; // or ember / jade, or your own
+import "@quentinandrieu/design-system/accents/iris.css"; // or ember / jade / sakura / shu, or your own
 import { Button, Sheet, TabBar } from "@quentinandrieu/design-system";
 ```
 
@@ -83,6 +83,6 @@ npm version patch && git push --follow-tags
 
 - `src/styles/tokens.css` — the canonical vocabulary (dark + light)
 - `src/styles/components.css` — `ds-*` classes
-- `src/accents/*.css` — hue presets (`ember`, `iris`, `jade`)
+- `src/accents/*.css` — hue presets (`ember`, `iris`, `jade`, `sakura`, `shu`)
 - `src/components/*` — `Glass`, `Button`, `Sheet`, `TabBar`, `Field`
 - `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)
