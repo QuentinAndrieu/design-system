@@ -1298,6 +1298,22 @@ html:has(.ds-shell--contained) body {
   flex: none;
 }
 
+/* Decorative right-edge art: stretched to the header's full height and
+   bottom-anchored, like the ground line the old illustrated heroes sat on.
+   The child scales to the row height unless the app sizes it itself. */
+.ds-apphead__art {
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  align-items: flex-end;
+  pointer-events: none;
+}
+
+.ds-apphead__art > * {
+  height: 100%;
+  width: auto;
+}
+
 /* A fleet header inside a locked-frame shell: the content region becomes a
    column — the header takes its row, the screen keeps the rest and goes on
    owning its scroll (fixed shells clip; screens scroll themselves). */
