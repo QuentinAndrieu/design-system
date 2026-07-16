@@ -12,6 +12,8 @@ export interface AppHeaderProps {
   title: ReactNode;
   /** Optional right-aligned screen actions. Never navigation — tabs live in the TabBar. */
   actions?: ReactNode;
+  /** App-side spacing tweaks (e.g. matching the app's own content padding). */
+  className?: string;
 }
 
 /**
@@ -19,9 +21,9 @@ export interface AppHeaderProps {
  * Rendered by `AppShell` via its `appHeader` slot so it scrolls with the content —
  * it is a page block, not pinned chrome.
  */
-export function AppHeader({ label, lang, title, actions }: AppHeaderProps) {
+export function AppHeader({ label, lang, title, actions, className }: AppHeaderProps) {
   return (
-    <header className="ds-apphead">
+    <header className={["ds-apphead", className].filter(Boolean).join(" ")}>
       <div className="ds-apphead__text">
         <span className="ds-apphead__label" lang={lang}>
           {label}

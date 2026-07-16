@@ -1298,6 +1298,21 @@ html:has(.ds-shell--contained) body {
   flex: none;
 }
 
+/* A fleet header inside a locked-frame shell: the content region becomes a
+   column — the header takes its row, the screen keeps the rest and goes on
+   owning its scroll (fixed shells clip; screens scroll themselves). */
+.ds-shell--fixed .ds-shell-content:has(> .ds-apphead) {
+  display: flex;
+  flex-direction: column;
+}
+.ds-shell--fixed .ds-shell-content > .ds-apphead {
+  flex: none;
+}
+.ds-shell--fixed .ds-shell-content:has(> .ds-apphead) > :not(.ds-apphead) {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
 /* ================= modal (centered dialog) ================= */
 .ds-modal {
   position: fixed;
