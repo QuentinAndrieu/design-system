@@ -914,26 +914,38 @@ html:has(.ds-shell--contained) body {
   display: none;
 }
 
-.ds-cs-open {
+/* The action row above the artwork: the screen's own tools on the left, the
+   configure opener pinned at the right — kurumon's top-row shape, fleet-wide.
+   Carries data-cs-hide, so it vanishes while the sheet is open. */
+.ds-cs-bar {
   display: flex;
   align-items: center;
-  gap: 7px;
-  margin: 14px auto 4px;
-  padding: 9px 16px;
+  gap: 8px;
+  padding: 2px 16px 10px;
+}
+
+.ds-cs-bar-tools {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ds-cs-fab {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ctl-h, 34px);
+  height: var(--ctl-h, 34px);
   border-radius: var(--radius-pill);
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
   backdrop-filter: var(--glass-filter);
   -webkit-backdrop-filter: var(--glass-filter);
-  font-size: 13px;
-  font-weight: 600;
   color: rgb(var(--fg));
-  /* Fades with the choreography — and back in as a closing drag progresses. */
-  opacity: calc(1 - var(--ds-cs-p));
-}
-
-.ds-configsheet--open .ds-cs-open {
-  pointer-events: none;
 }
 
 .ds-cs-sheet {
@@ -985,17 +997,6 @@ html:has(.ds-shell--contained) body {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--fg-faint);
-}
-
-.ds-cs-close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: rgb(var(--fg) / 0.08);
-  color: var(--fg-muted);
 }
 
 .ds-cs-body {

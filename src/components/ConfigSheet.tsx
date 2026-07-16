@@ -30,12 +30,16 @@ export interface ConfigSheetProps {
   hero: ReactNode;
   /** The configuration form. Scrolls INSIDE the sheet; scrolling never dismisses. */
   children: ReactNode;
-  /** Label on the opener pill under the artwork (pass the app's i18n string). */
+  /** Accessible name of the configure button in the toolbar (i18n). */
   openLabel: string;
+  /**
+   * The screen's action row, rendered ABOVE the artwork with the configure
+   * button appended at its far right (kurumon's toggles + export, kamishibai's
+   * save icons). Hidden while the sheet is open.
+   */
+  toolbar?: ReactNode;
   /** Sheet header label. Defaults to `openLabel`. */
   title?: ReactNode;
-  /** Accessible label of the ✕ button (i18n). */
-  closeLabel?: string;
   /** Artwork width/height ratio, used to budget the shrunk hero (default 3/4). */
   aspect?: number;
   /** Extra classes on the sheet surface. */
@@ -60,8 +64,8 @@ export function ConfigSheet({
   hero,
   children,
   openLabel,
+  toolbar,
   title,
-  closeLabel = "Close",
   aspect = 0.75,
   className,
   onOpenChange,
@@ -128,7 +132,7 @@ export function ConfigSheet({
     const scroller = getScrollParent(root);
     const scrolled = scroller ? scroller.scrollTop : window.scrollY;
     const chrome = root.getBoundingClientRect().top + scrolled;
-    const budget = (window.innerHeight - sheet.offsetHeight - chrome - 24) * aspect;
+    const budget = (window.innerHeight - sheet.offsetHeight - chrome - 12) * aspect;
     const w = Math.max(140, Math.min(budget, root.clientWidth));
     root.style.setProperty("--ds-cs-open-w", `${Math.round(w)}px`);
   }, [aspect]);
@@ -206,20 +210,23 @@ export function ConfigSheet({
       className={open ? "ds-configsheet ds-configsheet--open" : "ds-configsheet"}
       style={{ "--ds-cs-aspect": aspect } as CSSProperties}
     >
+      {/* The screen's action row + the configure opener, kurumon's top-row
+          shape — hidden (data-cs-hide) while the sheet is open. */}
+      <div className="ds-cs-bar" data-cs-hide>
+        <div className="ds-cs-bar-tools">{toolbar}</div>
+        <button
+          type="button"
+          className="ds-cs-fab"
+          aria-label={openLabel}
+          title={openLabel}
+          onClick={() => !open && set(true)}
+        >
+          <Icon name="set" size={16} />
+        </button>
+      </div>
       <div className="ds-cs-hero" onClickCapture={onHeroClickCapture}>
         {hero}
       </div>
-      {/* Always mounted — it fades with the choreography (opacity from
-          --ds-cs-p) and grows back in as a closing drag progresses. */}
-      <button
-        type="button"
-        className="ds-cs-open"
-        tabIndex={open ? -1 : 0}
-        onClick={() => !open && set(true)}
-      >
-        <Icon name="set" size={15} />
-        {openLabel}
-      </button>
       <div
         ref={sheetRef}
         className={className ? `ds-cs-sheet ${className}` : "ds-cs-sheet"}
@@ -233,11 +240,9 @@ export function ConfigSheet({
           onPointerUp={onGripUp}
           onPointerCancel={onGripCancel}
         />
+        {/* Title only — dismissal is the grip, the artwork, or Escape. */}
         <div className="ds-cs-head">
           <span className="ds-cs-title">{title ?? openLabel}</span>
-          <button type="button" className="ds-cs-close" aria-label={closeLabel} onClick={() => set(false)}>
-            <Icon name="x" size={14} />
-          </button>
         </div>
         <div className="ds-cs-body">{children}</div>
       </div>
