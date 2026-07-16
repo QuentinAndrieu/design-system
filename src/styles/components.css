@@ -876,12 +876,12 @@ html:has(.ds-shell--contained) body {
    slides over the tab bar and scrolls internally. Dismissal is explicit only.
 
    Everything — sheet position, hero width, pill fade — derives from ONE number,
-   the registered custom property --ds-cs-p (0 = rest, 1 = configuring). The
-   class toggles it and the transition tweens it, so open plays as one slow
-   choreography; a grip drag sets it inline per-frame, so the artwork grows
-   under the finger exactly as the sheet leaves (the IG/TikTok feel). A plain
-   max-width toggle can't do either: none ↔ clamp() isn't interpolable — the
-   artwork snapped. */
+   the custom property --ds-cs-p (0 = rest, 1 = configuring). The COMPONENT
+   tweens it with a rAF ease (and a grip drag sets it per-frame, so the artwork
+   grows under the finger exactly as the sheet leaves — the IG/TikTok feel).
+   Deliberately NOT a CSS transition: transitioning a registered custom
+   property proved flaky (delayed starts on close), and a plain max-width
+   toggle can't animate at all — none ↔ clamp() isn't interpolable. */
 @property --ds-cs-p {
   syntax: "<number>";
   inherits: true;
@@ -896,16 +896,6 @@ html:has(.ds-shell--contained) body {
      real viewport, real sheet height, real chrome above the artwork. */
   --ds-cs-h: min(58%, 500px);
   --ds-cs-p: 0;
-  transition: --ds-cs-p 0.45s cubic-bezier(0.22, 0.9, 0.26, 1);
-}
-
-.ds-configsheet--open {
-  --ds-cs-p: 1;
-}
-
-/* While the finger drives it, the number must not tween. */
-.ds-configsheet--drag {
-  transition: none;
 }
 
 .ds-cs-hero {

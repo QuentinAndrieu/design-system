@@ -70,12 +70,46 @@ export function ConfigSheet({
   const sheetRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
 
+  // The single choreography number (0 = rest, 1 = configuring), tweened by a
+  // rAF ease — sheet position, hero width and pill fade all derive from it in
+  // CSS. JS-driven on purpose: CSS transitions on registered custom properties
+  // start late/skip in the wild.
+  const pRef = useRef(0);
+  const animRef = useRef<number | null>(null);
+  const writeP = useCallback((v: number) => {
+    pRef.current = v;
+    rootRef.current?.style.setProperty("--ds-cs-p", String(v));
+  }, []);
+  const tweenTo = useCallback(
+    (target: number) => {
+      if (animRef.current !== null) cancelAnimationFrame(animRef.current);
+      const from = pRef.current;
+      const start = performance.now();
+      const DUR = 450;
+      const easeOut = (t: number) => 1 - Math.pow(1 - t, 4);
+      const step = (now: number) => {
+        const t = Math.min(1, (now - start) / DUR);
+        writeP(from + (target - from) * easeOut(t));
+        animRef.current = t < 1 ? requestAnimationFrame(step) : null;
+      };
+      animRef.current = requestAnimationFrame(step);
+    },
+    [writeP],
+  );
+  useEffect(
+    () => () => {
+      if (animRef.current !== null) cancelAnimationFrame(animRef.current);
+    },
+    [],
+  );
+
   const set = useCallback(
     (v: boolean) => {
       setOpen(v);
       onOpenChange?.(v);
+      if (!v) tweenTo(0);
     },
-    [onOpenChange],
+    [onOpenChange, tweenTo],
   );
 
   // The hero's open-state width, measured in real pixels: what the viewport
@@ -99,6 +133,7 @@ export function ConfigSheet({
   useEffect(() => {
     if (!open) return;
     measureOpenW();
+    tweenTo(1);
     const scroller = getScrollParent(rootRef.current);
     (scroller ?? window).scrollTo({ top: 0, behavior: "smooth" });
     const lockEl = scroller ?? document.documentElement;
@@ -129,59 +164,35 @@ export function ConfigSheet({
     [open, set],
   );
 
-  // Grip drag drives the shared progress number (--ds-cs-p) per-frame, so the
-  // sheet follows the finger AND the artwork grows toward full width as it
-  // leaves — one choreography, live. Releasing past the threshold dismisses,
-  // else it springs back; either way the transition resumes from the dragged
-  // value (the inline var is cleared a frame after the class flips).
+  // Grip drag writes the shared progress number per-frame, so the sheet
+  // follows the finger AND the artwork grows toward full width as it leaves —
+  // one choreography, live. Releasing past the threshold dismisses (the tween
+  // finishes the close from wherever the finger left off), else springs back.
   const dragY = useRef<number | null>(null);
-  const settle = useCallback(
-    (next: boolean) => {
-      const root = rootRef.current;
-      if (!root) return;
-      root.classList.remove("ds-configsheet--drag");
-      if (!next) set(false);
-      requestAnimationFrame(() => {
-        root.style.removeProperty("--ds-cs-p");
-      });
-    },
-    [set],
-  );
   const onGripDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (animRef.current !== null) cancelAnimationFrame(animRef.current);
     dragY.current = e.clientY;
-    rootRef.current?.classList.add("ds-configsheet--drag");
     e.currentTarget.setPointerCapture(e.pointerId);
   };
   const onGripMove = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
     const sheetH = sheetRef.current?.offsetHeight ?? 1;
     const dy = Math.max(0, e.clientY - dragY.current);
-    const p = Math.max(0, 1 - dy / sheetH);
-    rootRef.current?.style.setProperty("--ds-cs-p", String(p));
+    writeP(Math.max(0, 1 - dy / sheetH));
   };
   const onGripUp = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
     const sheetH = sheetRef.current?.offsetHeight ?? 1;
     const dy = Math.max(0, e.clientY - dragY.current);
     dragY.current = null;
-    settle(dy <= sheetH * DISMISS_RATIO);
+    if (dy > sheetH * DISMISS_RATIO) set(false);
+    else tweenTo(1);
   };
   const onGripCancel = () => {
     if (dragY.current === null) return;
     dragY.current = null;
-    settle(true);
+    tweenTo(1);
   };
-
-  // Safety net: whatever interrupted a drag (lost pointer, Escape, ✕ mid-drag),
-  // an open/close flip always clears the drag remnants so no stuck in-between
-  // state can survive.
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    dragY.current = null;
-    root.classList.remove("ds-configsheet--drag");
-    root.style.removeProperty("--ds-cs-p");
-  }, [open]);
 
   return (
     <div
