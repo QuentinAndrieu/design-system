@@ -1258,6 +1258,7 @@ html:has(.ds-shell--contained) body {
 /* A page block, not pinned chrome: it scrolls with the content. The accent label
    is what tells the six apps apart; the title is the current section's. */
 .ds-apphead {
+  position: relative;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -1267,6 +1268,8 @@ html:has(.ds-shell--contained) body {
 }
 
 .ds-apphead__text {
+  position: relative;
+  z-index: 1;
   min-width: 0;
 }
 
@@ -1298,12 +1301,15 @@ html:has(.ds-shell--contained) body {
   flex: none;
 }
 
-/* Decorative right-edge art: stretched to the header's full height and
-   bottom-anchored, like the ground line the old illustrated heroes sat on.
-   The child scales to the row height unless the app sizes it itself. */
+/* Decorative right-edge art: out of flow against the header's box (a flex
+   child can't resolve a % height off a row its own height defines), spanning
+   the full header height, bottom-anchored like the ground line the old
+   illustrated heroes sat on. Text stacks above it. */
 .ds-apphead__art {
-  flex: none;
-  align-self: stretch;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
   display: flex;
   align-items: flex-end;
   pointer-events: none;
