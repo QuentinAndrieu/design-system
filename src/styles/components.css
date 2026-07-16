@@ -889,15 +889,12 @@ html:has(.ds-shell--contained) body {
 }
 
 .ds-configsheet {
-  /* The sheet's height and the chrome (header + margins) above the shrunk hero —
-     both feed the hero's open-state width budget below. */
-  --ds-cs-h: min(calc(var(--app-viewport-h, 100dvh) * 0.58), 500px);
-  --ds-cs-top: 170px;
-  --ds-cs-open-w: clamp(
-    140px,
-    calc((var(--app-viewport-h, 100dvh) - var(--ds-cs-h) - var(--ds-cs-top)) * var(--ds-cs-aspect, 0.75)),
-    100%
-  );
+  /* Sheet height: % here resolves against the VIEWPORT because the sheet is
+     position: fixed (initial containing block) — do not reuse this var in any
+     in-flow context, where % means something else entirely. The hero's
+     open-state width (--ds-cs-open-w) is measured in PX by the component:
+     real viewport, real sheet height, real chrome above the artwork. */
+  --ds-cs-h: min(58%, 500px);
   --ds-cs-p: 0;
   transition: --ds-cs-p 0.45s cubic-bezier(0.22, 0.9, 0.26, 1);
 }
@@ -914,7 +911,11 @@ html:has(.ds-shell--contained) body {
 .ds-cs-hero {
   width: 100%;
   margin-inline: auto;
-  max-width: calc(100% - (100% - var(--ds-cs-open-w)) * var(--ds-cs-p));
+  /* Additive lerp between full width (p=0) and the measured open width (p=1).
+     Deliberately NOT the `100% - (100% - w) * p` form: Chrome's calc
+     simplification mis-folds that double negative at exactly p=1 into
+     `0% - w` — a negative max-width, i.e. an invisible hero. */
+  max-width: calc(100% + (var(--ds-cs-open-w, 100%) - 100%) * var(--ds-cs-p));
 }
 
 /* Hero furniture (toggles, action rows) that should vanish while configuring —

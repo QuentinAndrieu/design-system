@@ -78,10 +78,27 @@ export function ConfigSheet({
     [onOpenChange],
   );
 
+  // The hero's open-state width, measured in real pixels: what the viewport
+  // keeps above the sheet (minus the chrome above the artwork), times the
+  // artwork's aspect. CSS lerps between 100% and this value via --ds-cs-p.
+  const measureOpenW = useCallback(() => {
+    const root = rootRef.current;
+    const sheet = sheetRef.current;
+    if (!root || !sheet) return;
+    const scroller = getScrollParent(root);
+    const scrolled = scroller ? scroller.scrollTop : window.scrollY;
+    const chrome = root.getBoundingClientRect().top + scrolled;
+    const budget = (window.innerHeight - sheet.offsetHeight - chrome - 24) * aspect;
+    const w = Math.max(140, Math.min(budget, root.clientWidth));
+    root.style.setProperty("--ds-cs-open-w", `${Math.round(w)}px`);
+  }, [aspect]);
+
   // While open: bring the artwork to the top, freeze the page behind the sheet,
-  // close on Escape. The scroller is the contained shell's content or the window.
+  // track resizes, close on Escape. The scroller is the contained shell's
+  // content or the window.
   useEffect(() => {
     if (!open) return;
+    measureOpenW();
     const scroller = getScrollParent(rootRef.current);
     (scroller ?? window).scrollTo({ top: 0, behavior: "smooth" });
     const lockEl = scroller ?? document.documentElement;
@@ -91,11 +108,13 @@ export function ConfigSheet({
       if (e.key === "Escape") set(false);
     };
     window.addEventListener("keydown", onKey);
+    window.addEventListener("resize", measureOpenW);
     return () => {
       lockEl.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", measureOpenW);
     };
-  }, [open, set]);
+  }, [open, set, measureOpenW]);
 
   // Tap the artwork to dismiss (only while open); controls marked
   // `data-no-collapse` keep working.
