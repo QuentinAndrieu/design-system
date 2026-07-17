@@ -77,6 +77,7 @@ export {
   ThemeSelect,
   useThemeEffect,
   useResolvedTheme,
+  createThemeStore,
   resolveTheme,
   applyTheme,
   themeBootScript,
@@ -87,6 +88,7 @@ export type {
   ThemePref,
   ResolvedTheme,
   ThemeBootOptions,
+  ThemeStoreOptions,
 } from "./components/Theme";
 export { Rating } from "./components/Rating";
 export type { RatingProps } from "./components/Rating";

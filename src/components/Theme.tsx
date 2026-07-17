@@ -84,6 +84,72 @@ export function useResolvedTheme(): ResolvedTheme {
   );
 }
 
+const isPref = (v: unknown): v is ThemePref => v === "auto" || v === "dark" || v === "light";
+
+export interface ThemeStoreOptions {
+  /** localStorage key holding the preference — pair it with the same key in {@link themeBootScript}. */
+  storageKey: string;
+  /** The preference to assume when nothing is stored — the app's opening theme. */
+  fallback: ThemePref;
+}
+
+/**
+ * A persisted preference store for an app whose theme is a standalone value.
+ *
+ * The preference has to be SHARED — More writes it, the root {@link useThemeEffect}
+ * resolves it — but it can't be read back off `<html data-theme>`, because `auto`
+ * resolves away to dark/light. So it needs a store, and four apps writing the same
+ * one is how the fleet got six different theme toggles in the first place.
+ *
+ * A module store rather than context: the DS bundle is evaluated by server
+ * components too, and a top-level createContext would crash the react-server
+ * condition. An app that already keeps the preference inside a larger settings blob
+ * (miru's zustand persist, nihongo's settings) keeps owning it — pair that store
+ * with {@link ThemeSelect} + {@link useThemeEffect} directly instead.
+ */
+export function createThemeStore({ storageKey, fallback }: ThemeStoreOptions) {
+  let pref: ThemePref | null = null;
+  const listeners = new Set<() => void>();
+
+  const getPref = (): ThemePref => {
+    if (pref === null) {
+      try {
+        const stored = localStorage.getItem(storageKey);
+        pref = isPref(stored) ? stored : fallback;
+      } catch {
+        pref = fallback; // private mode / storage disabled
+      }
+    }
+    return pref;
+  };
+
+  const setPref = (next: ThemePref) => {
+    pref = next;
+    try {
+      localStorage.setItem(storageKey, next);
+    } catch {
+      // storage unavailable — the theme still applies for this session
+    }
+    applyTheme(next);
+    listeners.forEach((l) => l());
+  };
+
+  const subscribe = (l: () => void) => {
+    listeners.add(l);
+    return () => {
+      listeners.delete(l);
+    };
+  };
+
+  /** `[pref, setPref]`. Reports `fallback` on the server so hydration matches the SSR markup. */
+  const useThemePref = (): [ThemePref, (next: ThemePref) => void] => [
+    useSyncExternalStore(subscribe, getPref, () => fallback),
+    setPref,
+  ];
+
+  return { useThemePref, getPref, setPref };
+}
+
 export interface ThemeBootOptions {
   /** localStorage key holding the preference. */
   storageKey: string;
