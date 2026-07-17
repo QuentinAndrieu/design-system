@@ -73,6 +73,21 @@ export { Slider } from "./components/Slider";
 export type { SliderProps } from "./components/Slider";
 export { Switch } from "./components/Switch";
 export type { SwitchProps } from "./components/Switch";
+export {
+  ThemeSelect,
+  useThemeEffect,
+  useResolvedTheme,
+  resolveTheme,
+  applyTheme,
+  themeBootScript,
+  THEME_BG,
+} from "./components/Theme";
+export type {
+  ThemeSelectProps,
+  ThemePref,
+  ResolvedTheme,
+  ThemeBootOptions,
+} from "./components/Theme";
 export { Rating } from "./components/Rating";
 export type { RatingProps } from "./components/Rating";
 
