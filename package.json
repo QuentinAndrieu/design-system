@@ -1,6 +1,6 @@
 {
   "name": "@quentinandrieu/design-system",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Glass design system shared across QuentinAndrieu's apps (kurumon, miru, nihongo-study …).",
   "license": "MIT",
   "author": "Quentin Andrieu",

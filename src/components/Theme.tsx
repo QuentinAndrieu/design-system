@@ -186,8 +186,13 @@ export function themeBootScript({ storageKey, jsonPath, fallback }: ThemeBootOpt
     "try{" +
     'var r=p==="auto"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p;' +
     "document.documentElement.dataset.theme=r;" +
+    // Create the meta when absent, don't just update it: no app declares viewport.themeColor
+    // (a static one is theme-blind — Next injects it after this script and it would win), so
+    // there is nothing in the SSR head to update, and merely skipping would leave the chrome
+    // untinted until hydration.
     'var m=document.querySelector(\'meta[name="theme-color"]\');' +
-    `if(m)m.setAttribute("content",r==="dark"?${JSON.stringify(THEME_BG.dark)}:${JSON.stringify(THEME_BG.light)});` +
+    "if(!m){m=document.createElement(\"meta\");m.setAttribute(\"name\",\"theme-color\");document.head.appendChild(m);}" +
+    `m.setAttribute("content",r==="dark"?${JSON.stringify(THEME_BG.dark)}:${JSON.stringify(THEME_BG.light)});` +
     "}catch(e){}})();"
   );
 }
