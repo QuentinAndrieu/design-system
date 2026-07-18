@@ -236,18 +236,28 @@ export function ConfigSheet({
   // from "open", because fullscreen drags the other way: up, from rest.
   // The distance the sheet can travel: inline it leaves entirely, fullscreen
   // stops at the peeking handle. Measured off the grip so the CSS peek (which
-  // carries a safe-area term, i.e. no parseable px value) stays the source of truth.
+  // carries a safe-area term, i.e. no parseable px value) stays the source of
+  // truth — but measured with the choreography pinned to rest, because the
+  // fullscreen grip collapses as --ds-cs-p rises: its live box mid-drag (or
+  // while open) is smaller than the peek the sheet's transform reckons with.
   const dragY = useRef<number | null>(null);
   const dragFromP = useRef(0);
+  const dragTravel = useRef(1);
   // Land on a state, whether or not `open` already agrees: flipping it runs the
   // open effect (which tweens), so only tween here when it wouldn't fire.
   const settle = (toOpen: boolean) => {
     if (toOpen === open) tweenTo(toOpen ? 1 : 0);
     else set(toOpen);
   };
-  const travel = () => {
+  const measureTravel = () => {
     const sheetH = sheetRef.current?.offsetHeight ?? 1;
-    const peek = full ? (gripRef.current?.offsetHeight ?? 0) : 0;
+    let peek = 0;
+    if (full && gripRef.current && rootRef.current) {
+      const prevP = pRef.current;
+      rootRef.current.style.setProperty("--ds-cs-p", "0");
+      peek = gripRef.current.offsetHeight;
+      rootRef.current.style.setProperty("--ds-cs-p", String(prevP));
+    }
     return Math.max(1, sheetH - peek);
   };
   const onGripDown = (e: PointerEvent<HTMLDivElement>) => {
@@ -255,6 +265,7 @@ export function ConfigSheet({
     // Measure now, not on open: dragging up from rest must shrink the artwork
     // under the finger, and the open effect hasn't run yet.
     measureOpenW();
+    dragTravel.current = measureTravel();
     dragY.current = e.clientY;
     dragFromP.current = pRef.current;
     e.currentTarget.setPointerCapture(e.pointerId);
@@ -262,7 +273,7 @@ export function ConfigSheet({
   const onGripMove = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;
     const up = dragY.current - e.clientY;
-    writeP(Math.max(0, Math.min(1, dragFromP.current + up / travel())));
+    writeP(Math.max(0, Math.min(1, dragFromP.current + up / dragTravel.current)));
   };
   const onGripUp = (e: PointerEvent<HTMLDivElement>) => {
     if (dragY.current === null) return;

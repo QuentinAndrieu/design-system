@@ -1116,15 +1116,21 @@ html:has(.ds-shell--contained) body {
 }
 
 /* At rest the handle is the ONLY affordance for the sheet, so it gets a real
-   target and says what it opens. */
+   target and says what it opens. The peek height is a REST affordance, though:
+   held while the sheet was up, it left a dead band as tall as the handle (plus
+   the home-indicator pad) between the pill and the first control — so the box
+   collapses to a compact grabber as --ds-cs-p rises. Top-anchored rather than
+   centred: the pill keeps its rest position exactly, and only the space below
+   it leaves. The label under the pill overflows the shrinking box, but it has
+   faded out (opacity, above) well before the clip could reach it. */
 .ds-configsheet--full .ds-cs-grip {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 7px;
-  height: var(--ds-cs-peek);
-  padding: 0 0 env(safe-area-inset-bottom);
+  height: calc(var(--ds-cs-peek) + (30px - var(--ds-cs-peek)) * var(--ds-cs-p));
+  padding: calc(16px - 6px * var(--ds-cs-p)) 0 0;
+  overflow: hidden;
 }
 
 .ds-cs-rest {
