@@ -645,6 +645,45 @@ button.ds-row:disabled {
   cursor: default;
 }
 
+/* ================= ambient wash ================= */
+/* Ambient wash blobs the glass refracts. Drop <div class="ds-wash" /> once at the
+   app root; it sits behind everything and reacts to the active accent. A VIEWPORT
+   layer on purpose — never the shell's `ambient` slot: on desktop the shell is a
+   column, and a wash scoped to it paints the column's edge onto the page. Lives
+   with the components (0.15.1), not the base reset, so an app that keeps its own
+   preflight (kurumon) can still drop it in. */
+.ds-wash {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ds-wash::before,
+.ds-wash::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+}
+
+.ds-wash::before {
+  width: 46vmax;
+  height: 46vmax;
+  left: -16vmax;
+  top: -12vmax;
+  background: var(--accent-wash);
+}
+
+.ds-wash::after {
+  width: 42vmax;
+  height: 42vmax;
+  right: -14vmax;
+  bottom: -18vmax;
+  background: var(--wash-night);
+}
+
 /* ================= app shell (layout frame + tab-bar clearance) ================= */
 /* Viewport + floating-tab-bar geometry, shared by every app via <AppShell>.
    --app-viewport-h: 100% works in a browser tab, but collapses in iOS 26

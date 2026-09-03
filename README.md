@@ -91,4 +91,6 @@ npm version patch && git push --follow-tags
 - `ConfigSheet` (0.15.0) takes `dock`: past the same breakpoint the studio's sheet docks
   as a permanent side panel beside the artwork — no handle, no choreography; `useDesktop()`
   is the matching hook for app-side layout decisions
+- `.ds-wash` (0.15.1) ships in `components.css`, not the base reset — a fixed viewport layer
+  any app can drop at its root, including one that keeps its own preflight
 - `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)

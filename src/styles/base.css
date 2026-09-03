@@ -57,40 +57,6 @@ svg {
   font-family: var(--font-jp);
 }
 
-/* Ambient wash blobs the glass refracts. Drop <div class="ds-wash" /> once at the
-   app root; it sits behind everything and reacts to the active accent. */
-.ds-wash {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.ds-wash::before,
-.ds-wash::after {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(70px);
-}
-
-.ds-wash::before {
-  width: 46vmax;
-  height: 46vmax;
-  left: -16vmax;
-  top: -12vmax;
-  background: var(--accent-wash);
-}
-
-.ds-wash::after {
-  width: 42vmax;
-  height: 42vmax;
-  right: -14vmax;
-  bottom: -18vmax;
-  background: var(--wash-night);
-}
-
 /* Respect reduced-motion: neutralize animations + transitions. */
 @media (prefers-reduced-motion: reduce) {
   *,
