@@ -101,6 +101,26 @@ const ICONS = {
       <circle cx="15" cy="15" r="1.3" fill="currentColor" stroke="none" />
     </>
   ),
+  // — kurudex's tab bar. A catalogue of slots with one filled: the dex. Six cells
+  // on the 24×24 grid; two rows read as a page of a collection, not a keypad.
+  dex: (
+    <>
+      <rect x="3.5" y="4.5" width="4.6" height="6.2" rx="1.2" fill="currentColor" stroke="none" />
+      <rect x="9.7" y="4.5" width="4.6" height="6.2" rx="1.2" />
+      <rect x="15.9" y="4.5" width="4.6" height="6.2" rx="1.2" />
+      <rect x="3.5" y="13.3" width="4.6" height="6.2" rx="1.2" />
+      <rect x="9.7" y="13.3" width="4.6" height="6.2" rx="1.2" />
+      <rect x="15.9" y="13.3" width="4.6" height="6.2" rx="1.2" />
+    </>
+  ),
+  // Completion / progress. A cup, not a medal: the medal's ribbon collapses at 18px.
+  trophy: (
+    <>
+      <path d="M8 4.5h8v5.3a4 4 0 0 1-8 0z" />
+      <path d="M8 6.2H5.6a2.4 2.4 0 0 0 2.4 4.2M16 6.2h2.4A2.4 2.4 0 0 1 16 10.4" />
+      <path d="M12 13.8v3.2M9.2 19.5h5.6M10.4 17h3.2" />
+    </>
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof ICONS;

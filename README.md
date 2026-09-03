@@ -85,4 +85,7 @@ npm version patch && git push --follow-tags
 - `src/styles/components.css` — `ds-*` classes
 - `src/accents/*.css` — hue presets (`ember`, `iris`, `jade`, `sakura`, `shu`)
 - `src/components/*` — `Glass`, `Button`, `Sheet`, `TabBar`, `Field`
+- `AppShell` (0.14.0) takes `rail`: on viewports ≥ 900px the same `TabBar` docks as a
+  vertical rail on the left and a constrained shell widens to `--ds-shell-max-wide`
+  (64rem) — the desktop layout, opt-in per app; the phone shell is untouched below it
 - `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)

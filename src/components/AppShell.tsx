@@ -54,6 +54,15 @@ export interface AppShellProps {
   ambient?: ReactNode;
   /** Override the constrained max-width (any CSS length). Ignored when `width="full"`. */
   maxWidth?: string;
+  /**
+   * Desktop layout. On wide viewports (≥ 900px) the SAME `bottomBar` tab bar docks
+   * as a vertical rail on the left edge — the floating capsule geometry and its
+   * bottom clearance are dropped, the content column sits right of the rail, and a
+   * `constrained` shell widens to `--ds-shell-max-wide` (64rem). Below the
+   * breakpoint nothing changes: the phone shell is exactly what it was. Opt-in —
+   * the mobile-first apps stay as they are until they choose it.
+   */
+  rail?: boolean;
   /** Extra classes on the content region. */
   className?: string;
   /**
@@ -79,12 +88,15 @@ export function AppShell({
   appHeader,
   footer,
   maxWidth,
+  rail = false,
   className,
   contentRef,
 }: AppShellProps) {
   return (
     <div
-      className={`ds-shell ds-shell--${width} ds-shell--${scroll}`}
+      className={[`ds-shell ds-shell--${width} ds-shell--${scroll}`, rail && "ds-shell--rail"]
+        .filter(Boolean)
+        .join(" ")}
       style={maxWidth ? ({ ["--ds-shell-max" as string]: maxWidth } as React.CSSProperties) : undefined}
     >
       {ambient != null && (

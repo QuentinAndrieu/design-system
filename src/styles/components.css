@@ -771,6 +771,77 @@ html:has(.ds-shell--contained) body {
   pointer-events: none;
 }
 
+/* ---------- desktop: the rail ----------
+   Opt-in (`<AppShell rail>`): on wide viewports the SAME <TabBar> docks as a
+   vertical rail on the left edge. One nav element, two layouts — the app passes
+   the tab bar it already has; nothing is duplicated. The floating-capsule
+   geometry (centred, bottom-pinned, 480px wide) is replaced wholesale, the
+   bottom clearance shrinks to plain breathing room, the document column shifts
+   right of the rail and centres in what's left, and a `constrained` shell widens
+   to --ds-shell-max-wide. Below the breakpoint nothing here applies: the phone
+   shell is untouched, which is why every app can adopt it independently.
+   The breakpoint is a literal (media queries can't read custom properties);
+   the rail width and the wide column are tokens an app may tune. */
+:root {
+  --ds-rail-w: 88px;
+  --ds-shell-max-wide: 64rem;
+}
+@media (min-width: 900px) {
+  /* Page-scroll shells: the document's column starts right of the rail, so the
+     centred shell centres in the remaining width. */
+  html:has(.ds-shell--rail.ds-shell--page) body {
+    padding-left: var(--ds-rail-w);
+  }
+  /* Locked-frame shells are the frame — shift their left edge instead. */
+  .ds-shell--rail.ds-shell--fixed,
+  .ds-shell--rail.ds-shell--contained {
+    left: var(--ds-rail-w);
+  }
+  .ds-shell--rail {
+    /* No capsule to clear anymore — the rail sits at the side. */
+    --tabbar-clearance: 2rem;
+  }
+  .ds-shell--rail.ds-shell--constrained {
+    max-width: var(--ds-shell-max-wide);
+  }
+
+  .ds-shell--rail .ds-tabbar {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    transform: none;
+    width: var(--ds-rail-w);
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 6px;
+    padding: calc(env(safe-area-inset-top) + 28px) 8px 20px;
+    border-radius: 0;
+    border-width: 0 1px 0 0;
+    box-shadow: none;
+  }
+  .ds-shell--rail .ds-tab {
+    width: 64px;
+    padding: 9px 0 8px;
+    gap: 5px;
+    border-radius: 14px;
+    transition:
+      color var(--dur-fast) var(--ease),
+      background-color var(--dur-fast) var(--ease);
+  }
+  .ds-shell--rail .ds-tab span {
+    font-size: 10.5px;
+  }
+  /* A pointer affordance the capsule never needed. Still no hue: the selected
+     tab is stated by contrast + weight (same rule as the capsule), and the
+     resting fill is the faintest --fg tint so it reads in every accent. */
+  .ds-shell--rail .ds-tab:hover:not(:disabled) {
+    background: rgb(var(--fg) / 0.05);
+  }
+  .ds-shell--rail .ds-tab[aria-selected="true"] {
+    background: rgb(var(--fg) / 0.07);
+  }
+}
+
 /* ================= sheet (Radix Dialog) ================= */
 .ds-scrim {
   position: fixed;
