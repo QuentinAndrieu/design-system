@@ -45,6 +45,46 @@ export const Fullscreen = () => (
   </ConfigSheet>
 );
 
+/** The desktop shape of the same studio: `dock` turns the sheet into a docked
+ *  side panel once the preview is 900px wide — no handle, no opener, the
+ *  artwork budgeted against the stage beside the panel. Narrow the preview and
+ *  it is the fullscreen phone studio above again. */
+export const Docked = () => (
+  <ConfigSheet
+    variant="fullscreen"
+    dock
+    openLabel="Configure"
+    exitLabel="Back"
+    onExit={() => {}}
+    aspect={3 / 4}
+    toolbar={<span style={{ color: "var(--fg-muted)", fontSize: 12 }}>tools</span>}
+    hero={
+      <div
+        style={{
+          aspectRatio: "3 / 4",
+          width: "100%",
+          borderRadius: 14,
+          background: "rgb(var(--fg) / 0.08)",
+          border: "1px solid var(--glass-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "var(--fg-muted)",
+        }}
+      >
+        the artwork
+      </div>
+    }
+  >
+    <GroupLabel>Subject</GroupLabel>
+    <SettingsGroup>
+      <Row title="Name" trailing={<Field defaultValue="Yaris GR" />} />
+      <Row title="Foil" trailing={<Switch checked onChange={() => {}} label="Foil" />} />
+    </SettingsGroup>
+    <div style={{ height: 900 }} />
+  </ConfigSheet>
+);
+
 export const Studio = () => (
   <div style={{ maxWidth: 440, margin: "0 auto" }}>
     <ConfigSheet

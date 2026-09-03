@@ -45,6 +45,7 @@ export { ParallaxSheet } from "./components/ParallaxSheet";
 export type { ParallaxSheetProps } from "./components/ParallaxSheet";
 export { ConfigSheet } from "./components/ConfigSheet";
 export type { ConfigSheetProps } from "./components/ConfigSheet";
+export { useDesktop, DESKTOP_QUERY, DESKTOP_MIN_WIDTH } from "./components/Desktop";
 
 // navigation
 export { TabBar } from "./components/TabBar";

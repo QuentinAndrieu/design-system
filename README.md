@@ -88,4 +88,7 @@ npm version patch && git push --follow-tags
 - `AppShell` (0.14.0) takes `rail`: on viewports ≥ 900px the same `TabBar` docks as a
   vertical rail on the left and a constrained shell widens to `--ds-shell-max-wide`
   (64rem) — the desktop layout, opt-in per app; the phone shell is untouched below it
+- `ConfigSheet` (0.15.0) takes `dock`: past the same breakpoint the studio's sheet docks
+  as a permanent side panel beside the artwork — no handle, no choreography; `useDesktop()`
+  is the matching hook for app-side layout decisions
 - `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)

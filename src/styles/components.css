@@ -1219,6 +1219,103 @@ html:has(.ds-shell--contained) body {
   opacity: clamp(0, calc((var(--ds-cs-p) - 0.55) / 0.45), 1);
 }
 
+/* ---------- docked (desktop) ----------
+   `dock`: on a desktop-wide viewport (the component reads the SAME ≥ 900px query
+   the AppShell rail docks at) the sheet stops being a sheet — it docks as a
+   permanent panel at the artwork's right: no grip, no opener, no choreography,
+   --ds-cs-p simply ignored. The bar keeps its row on top; stage and panel share
+   the row below. Fullscreen docks inside its fixed frame (right of the rail when
+   the shell has one) as a two-pane row, the artwork budgeted against the stage
+   beside the panel exactly as it is budgeted above the sheet on a phone; inline
+   docks in flow with a sticky panel and lets the artwork take its column.
+   Keyed on the class, not a media query: the component decides, so the JS
+   (aria, handlers) and the CSS can never disagree. */
+.ds-configsheet--docked {
+  --ds-cs-dock-w: 26rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.ds-configsheet--docked .ds-cs-bar {
+  flex: 0 0 100%;
+}
+.ds-configsheet--docked .ds-cs-stage {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.ds-configsheet--docked .ds-cs-hero {
+  max-width: 100%;
+}
+.ds-configsheet--docked [data-cs-hide] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.ds-configsheet--docked .ds-cs-fab,
+.ds-configsheet--docked .ds-cs-grip {
+  display: none;
+}
+.ds-configsheet--docked .ds-cs-sheet {
+  position: sticky;
+  top: 12px;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  flex: 0 0 var(--ds-cs-dock-w);
+  width: var(--ds-cs-dock-w);
+  height: auto;
+  max-height: calc(100svh - 24px);
+  margin-left: 16px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+}
+.ds-configsheet--docked .ds-cs-head {
+  opacity: 1;
+  padding-top: 14px;
+}
+
+/* Fullscreen docked: the fixed frame is a two-pane row, stage | panel. Both
+   panes take the FRAME's height explicitly — a stretched flex line would size
+   itself to the artwork's intrinsic height first (a 3:4 card at full stage
+   width is taller than any laptop), and the budget measured off that stage
+   would just confirm the overflow. */
+.ds-configsheet--full.ds-configsheet--docked {
+  flex-wrap: nowrap;
+  align-items: stretch;
+}
+.ds-shell--rail .ds-configsheet--full.ds-configsheet--docked {
+  left: var(--ds-rail-w);
+}
+.ds-configsheet--full.ds-configsheet--docked .ds-cs-stage {
+  position: relative;
+  inset: auto;
+  height: 100%;
+  /* The floating bar's band on top, constant — nothing lerps while docked. */
+  padding: calc(env(safe-area-inset-top) + 56px) 24px 24px;
+}
+/* The measured budget (height × aspect, capped by the stage's width). */
+.ds-configsheet--full.ds-configsheet--docked .ds-cs-hero {
+  max-width: var(--ds-cs-open-w, 100%);
+}
+.ds-configsheet--full.ds-configsheet--docked .ds-cs-bar {
+  right: calc(var(--ds-cs-dock-w) + var(--ds-cs-inset));
+}
+.ds-configsheet--full.ds-configsheet--docked .ds-cs-sheet {
+  position: relative;
+  top: auto;
+  height: 100%;
+  max-height: none;
+  margin-left: 0;
+  border-width: 0 0 0 1px;
+  border-radius: 0;
+}
+.ds-configsheet--full.ds-configsheet--docked .ds-cs-head {
+  padding-top: calc(env(safe-area-inset-top) + 18px);
+}
+.ds-configsheet--full.ds-configsheet--docked .ds-cs-body {
+  padding-bottom: 24px;
+}
+
 /* ================= feedback: skeleton ================= */
 .ds-skel {
   position: relative;

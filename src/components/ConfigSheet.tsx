@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type CSSProperties,
@@ -9,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { Icon } from "./Icon";
+import { useDesktop } from "./Desktop";
 
 /** Walk up to the nearest scrolling ancestor. Returns `null` when there is none
  *  (a page-scroll shell, where the document/window is the scroller). */
@@ -71,6 +73,16 @@ export interface ConfigSheetProps {
   exitLabel?: string;
   /** Label on the resting handle (`fullscreen` only). Defaults to `openLabel`. */
   restLabel?: string;
+  /**
+   * Desktop layout. On a desktop-wide viewport (≥ 900px — the query the AppShell
+   * rail docks at, see `useDesktop`) the sheet stops being a sheet: it docks as a
+   * permanent panel at the artwork's right, with no grip, no opener and no
+   * choreography — the artwork keeps its aspect budget against the stage beside
+   * the panel. A `fullscreen` studio docks inside its fixed frame (right of the
+   * rail when the shell has one); `inline` docks in flow with a sticky panel.
+   * Below the breakpoint nothing changes. Opt-in, like the rail.
+   */
+  dock?: boolean;
 }
 
 /**
@@ -84,6 +96,9 @@ export interface ConfigSheetProps {
  *
  * Hero children tagged `data-cs-hide` (toggles, action rows) are hidden while
  * the sheet is open, so the shrunk hero is the artwork alone.
+ *
+ * `dock` adds the desktop shape: past the rail breakpoint the sheet is a docked
+ * side panel and all of the above choreography is simply off.
  */
 export function ConfigSheet({
   hero,
@@ -98,8 +113,14 @@ export function ConfigSheet({
   onExit,
   exitLabel,
   restLabel,
+  dock = false,
 }: ConfigSheetProps) {
   const full = variant === "fullscreen";
+  // Docked = the desktop shell (see `dock`): a permanent side panel instead of
+  // a sheet, no choreography. Decided by the SAME query the AppShell rail docks
+  // at, so the two layouts flip together. Below it, `open` runs the show as ever.
+  const wide = useDesktop();
+  const docked = dock && wide;
   const rootRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -195,7 +216,7 @@ export function ConfigSheet({
   // track resizes, close on Escape. The scroller is the contained shell's
   // content or the window.
   useEffect(() => {
-    if (!open) return;
+    if (!open || docked) return;
     measureOpenW();
     tweenTo(1);
     const scroller = getScrollParent(rootRef.current);
@@ -215,19 +236,33 @@ export function ConfigSheet({
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("resize", measureOpenW);
     };
-  }, [open, set, measureOpenW, full]);
+  }, [open, docked, set, measureOpenW, full]);
+
+  // Docked fullscreen: the artwork is budgeted against the stage beside the
+  // panel — once, and on every resize (the panel never moves, so there is
+  // nothing else to react to). The stage pads are constant while docked, so
+  // the measure's p=1 pin is moot. A layout effect, so the first docked paint
+  // already carries the budget instead of flashing a full-width artwork for a
+  // frame (never runs on the server: `docked` is false there). Inline docked
+  // needs no budget: the artwork takes its column and the page scrolls.
+  useLayoutEffect(() => {
+    if (!docked || !full) return;
+    measureOpenW();
+    window.addEventListener("resize", measureOpenW);
+    return () => window.removeEventListener("resize", measureOpenW);
+  }, [docked, full, measureOpenW]);
 
   // Tap the artwork to dismiss (only while open); controls marked
   // `data-no-collapse` keep working.
   const onHeroClickCapture = useCallback(
     (e: MouseEvent) => {
-      if (!open) return;
+      if (!open || docked) return;
       if ((e.target as HTMLElement).closest("[data-no-collapse]")) return;
       e.stopPropagation();
       e.preventDefault();
       set(false);
     },
-    [open, set],
+    [open, docked, set],
   );
 
   // Grip drag writes the shared progress number per-frame, so the sheet
@@ -261,6 +296,7 @@ export function ConfigSheet({
     return Math.max(1, sheetH - peek);
   };
   const onGripDown = (e: PointerEvent<HTMLDivElement>) => {
+    if (docked) return; // no grip while docked (it isn't even painted)
     if (animRef.current !== null) cancelAnimationFrame(animRef.current);
     // Measure now, not on open: dragging up from rest must shrink the artwork
     // under the finger, and the open effect hasn't run yet.
@@ -298,7 +334,11 @@ export function ConfigSheet({
 
   const cls = ["ds-configsheet"];
   if (full) cls.push("ds-configsheet--full");
-  if (open) cls.push("ds-configsheet--open");
+  // Docked ignores `open` wholesale — the panel is always there — so the open
+  // class stays off too: none of its rules (hidden furniture, inert tools)
+  // may leak into the desktop shape through a stale `open`.
+  if (docked) cls.push("ds-configsheet--docked");
+  else if (open) cls.push("ds-configsheet--open");
 
   return (
     <div
@@ -316,15 +356,18 @@ export function ConfigSheet({
           </button>
         )}
         <div className="ds-cs-bar-tools">{toolbar}</div>
-        <button
-          type="button"
-          className="ds-cs-fab"
-          aria-label={openLabel}
-          title={openLabel}
-          onClick={() => !open && set(true)}
-        >
-          <Icon name="set" size={16} />
-        </button>
+        {/* Nothing to open while docked — the panel is already there. */}
+        {!docked && (
+          <button
+            type="button"
+            className="ds-cs-fab"
+            aria-label={openLabel}
+            title={openLabel}
+            onClick={() => !open && set(true)}
+          >
+            <Icon name="set" size={16} />
+          </button>
+        )}
       </div>
       {/* The box the artwork centres in. Inline it is an inert wrapper; fullscreen
           it is the whole free area, and lerping its bottom pad is what walks the
@@ -337,7 +380,7 @@ export function ConfigSheet({
       <div
         ref={sheetRef}
         className={className ? `ds-cs-sheet ${className}` : "ds-cs-sheet"}
-        aria-hidden={!open}
+        aria-hidden={docked ? undefined : !open}
       >
         <div
           ref={gripRef}
