@@ -83,6 +83,13 @@ export interface ConfigSheetProps {
    * Below the breakpoint nothing changes. Opt-in, like the rail.
    */
   dock?: boolean;
+  /**
+   * Render the configure button at the toolbar's far right (default). A
+   * `fullscreen` studio may turn it off: its resting handle is already the way
+   * in, and the button doubles it (kurumon, 0.15.3). `inline` has nothing
+   * peeking at rest, so there the opener is the only way in — keep it.
+   */
+  opener?: boolean;
 }
 
 /**
@@ -114,6 +121,7 @@ export function ConfigSheet({
   exitLabel,
   restLabel,
   dock = false,
+  opener = true,
 }: ConfigSheetProps) {
   const full = variant === "fullscreen";
   // Docked = the desktop shell (see `dock`): a permanent side panel instead of
@@ -356,8 +364,9 @@ export function ConfigSheet({
           </button>
         )}
         <div className="ds-cs-bar-tools">{toolbar}</div>
-        {/* Nothing to open while docked — the panel is already there. */}
-        {!docked && (
+        {/* Nothing to open while docked — the panel is already there — and nothing
+            when the studio asked for no opener (fullscreen: the handle is the way in). */}
+        {!docked && opener && (
           <button
             type="button"
             className="ds-cs-fab"
