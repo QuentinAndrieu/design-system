@@ -406,9 +406,18 @@ button.ds-row:disabled {
    rounded-corner clip — with the panel in-flow (not portaled), overflow:hidden
    swallows it whole and the options can't even be tapped (the fleet's language
    picker, since 0.8.0). The escape lasts exactly as long as a panel is
-   mounted; the clip is back the moment it closes. */
+   mounted; the clip is back the moment it closes.
+
+   And it must escape the STACKING too: the group is a glass card, so its
+   backdrop-filter makes it a stacking context and the panel's own z-index only
+   counts inside it — any later sibling (the next labelled group) paints straight
+   over the options that hang below the card (kurumon's account switcher, 0.15.1:
+   the third user was under the Collection group). The language picker never
+   showed it only because Réglages is every More's last group. Lifting the group
+   while a panel is open puts the panel above the groups that follow. */
 .ds-setgroup:has(.ds-dropdown__panel, .ds-multiselect__panel) {
   overflow: visible;
+  z-index: 1;
 }
 
 .ds-setgroup > * + * {
