@@ -2,6 +2,16 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Icon } from "./Icon";
 
+/** The right edge a panel anchored under `el` must stay inside: the nearest ancestor whose
+ *  horizontal overflow is clipped, else the viewport. */
+function clipRight(el: HTMLElement): number {
+  for (let node = el.parentElement; node; node = node.parentElement) {
+    const ox = getComputedStyle(node).overflowX;
+    if (ox !== "visible") return node.getBoundingClientRect().right;
+  }
+  return window.innerWidth;
+}
+
 export interface MultiSelectOption {
   value: string;
   label: ReactNode;
@@ -65,13 +75,16 @@ export function MultiSelect({
   }, [open]);
 
   // Collision-aware: a left-anchored panel runs off the right edge when the trigger sits near it,
-  // so measure on open and flip to right-anchored (opens leftward) when it wouldn't fit.
+  // so measure on open and flip to right-anchored (opens leftward) when it wouldn't fit. The edge
+  // that matters is the nearest ancestor that CLIPS (an `overflow-x: hidden` shell column, a
+  // scroller), not the window: a column narrower than the viewport cut the panel at its own edge
+  // while the window check said it fit.
   const [alignRight, setAlignRight] = useState(false);
   useLayoutEffect(() => {
     if (!open || !rootRef.current) return;
     const PANEL_W = 224;
     const left = rootRef.current.getBoundingClientRect().left;
-    setAlignRight(left + PANEL_W > window.innerWidth - 8);
+    setAlignRight(left + PANEL_W > clipRight(rootRef.current) - 8);
   }, [open]);
 
   return (
