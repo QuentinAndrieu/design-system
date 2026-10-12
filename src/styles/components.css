@@ -267,30 +267,10 @@
   border: 1px solid var(--glass-border);
 }
 
-/* fill: stretch to the row, segments sharing width equally */
+/* fill: stretch to the row (how the segments share it: see `.ds-seg--fill button`) */
 .ds-seg--fill {
   display: flex;
   width: 100%;
-}
-
-/* Fill: segments share the row equally. min-width:0 lets them shrink below their
-   content so a 4-tab row never overflows (the last tab used to be clipped); labels
-   truncate rather than pushing the group past its container. */
-.ds-seg--fill button {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  /* tighter side padding + icon gap buy room for labels in a crowded fill row before they
-     truncate — a 4-tab row (icon + label each) fits its labels far better this way */
-  gap: 4px;
-  padding-left: 6px;
-  padding-right: 6px;
-}
-
-.ds-seg--fill button > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .ds-seg button {
@@ -304,6 +284,28 @@
   white-space: nowrap;
   color: var(--fg-faint);
   transition: color var(--dur-fast) var(--ease);
+}
+
+/* Fill: segments share the row, each from its own label's width (a short "Tout" lends room to a
+   long "Moments" — an equal split truncated a 5-tab row on a phone with space to spare), the
+   leftover split equally. min-width:0 still lets them shrink below their content so a crowded row
+   never overflows; labels truncate rather than pushing the group past its container. These rules
+   come AFTER `.ds-seg button` — same specificity, so before it they silently lost the padding. */
+.ds-seg--fill button {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  /* tighter side padding + icon gap buy room for labels in a crowded fill row before they
+     truncate — a 4-tab row (icon + label each) fits its labels far better this way */
+  gap: 4px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.ds-seg--fill button > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ds-seg button:disabled {
