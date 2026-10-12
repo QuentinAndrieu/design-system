@@ -39,7 +39,7 @@ export function AppHeader({ label, lang, title, back, actions, className }: AppH
       <div className="ds-apphead__text">
         {back ? (
           <button type="button" className="ds-apphead__label ds-apphead__back" onClick={back.onClick}>
-            <Icon name="back" size={13} />
+            <Icon name="back" size={11} />
             {back.label}
           </button>
         ) : (
