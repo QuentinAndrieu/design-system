@@ -95,4 +95,6 @@ npm version patch && git push --follow-tags
   any app can drop at its root, including one that keeps its own preflight
 - `AppHeader` (0.16.0) takes `back`: on a pushed screen the label line becomes the back link
   (`‹ Collection`) — two lines instead of app name + title + a back row; homes keep the name
+- `SegmentedControl` (0.17.0) takes an array `value` for a multi-select group — the same
+  track, several segments pressed (kurumon's icon-only card-type filter)
 - `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)

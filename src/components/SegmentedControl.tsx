@@ -14,7 +14,12 @@ export interface SegOption {
 
 export interface SegmentedControlProps {
   options: SegOption[];
-  value: string;
+  /**
+   * The pressed segment — or, for a MULTI-select group (0.17.0), the pressed segments: pass an
+   * array and every segment in it reads as pressed. `onChange` still reports the segment tapped;
+   * the caller toggles it in or out of its list.
+   */
+  value: string | readonly string[];
   onChange: (value: string) => void;
   /** `md` (default) for chrome switches; `sm` for compact toggles above artwork. */
   size?: "sm" | "md";
@@ -41,7 +46,7 @@ export function SegmentedControl({
         <button
           key={o.value}
           type="button"
-          aria-pressed={o.value === value}
+          aria-pressed={typeof value === "string" ? o.value === value : value.includes(o.value)}
           aria-label={o.title}
           title={o.title}
           disabled={o.disabled}
