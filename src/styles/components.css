@@ -146,7 +146,11 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 13px;
+  /* the inline-control height (--ctl-h), like the search, the triggers and the segmented control
+     — its 7px padding made it 34.75px, a hair off every control beside it */
+  box-sizing: border-box;
+  height: var(--ctl-h);
+  padding: 0 13px;
   border-radius: var(--radius-pill);
   white-space: nowrap;
   font-size: 12.5px;
@@ -262,6 +266,10 @@
   gap: 2px;
   padding: 3px;
   flex: none;
+  /* md is the inline-control height (--ctl-h): the segments stretch into it, so a text segment
+     and an icon one measure the same (a 12px label's line box made a text row 36px) */
+  box-sizing: border-box;
+  height: var(--ctl-h);
   border-radius: 12px;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -278,7 +286,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 5px 12px;
+  padding: 0 12px;
   border-radius: 9px;
   font-size: 12px;
   white-space: nowrap;
@@ -327,6 +335,7 @@
   gap: 1px;
   padding: 2px;
   border-radius: 9px;
+  height: auto;
 }
 
 .ds-seg--sm button {
@@ -1914,7 +1923,9 @@ html:has(.ds-shell--contained) body {
   background: rgb(var(--fg) / 0.05);
   border: 1px solid var(--glass-border);
   color: rgb(var(--fg));
-  font-size: 14px;
+  /* the inline controls' label size (the chip's) — 14px read as a heading beside a segmented
+     control's 12px in the same row */
+  font-size: 12.5px;
   transition: background var(--dur-fast) var(--ease);
 }
 
@@ -1988,7 +1999,7 @@ html:has(.ds-shell--contained) body {
   background: rgb(var(--fg) / 0.05);
   border: 1px solid var(--glass-border);
   color: var(--fg-muted);
-  font-size: 14px;
+  font-size: 12.5px;
   font-weight: 700;
   transition:
     background var(--dur-fast) var(--ease),
