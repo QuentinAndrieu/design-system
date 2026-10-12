@@ -1773,6 +1773,32 @@ html:has(.ds-shell--contained) body {
   color: rgb(var(--accent));
 }
 
+/* A pushed screen's back link, in the label's place (0.16.0): the label's size and accent, a
+   chevron before it, and a tap target taller than the 11px line — grown with padding and given
+   back with a negative margin, so the title doesn't move between a home and a pushed screen. */
+.ds-apphead__back {
+  /* block-level like the label it replaces, but only as wide as its text */
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 2px;
+  margin: -6px 0 -2px -4px;
+  padding: 6px 6px 6px 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgb(var(--accent));
+  cursor: pointer;
+}
+.ds-apphead__back:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 /* Japan-subject apps label themselves in Japanese (風土記, 日本語) */
 .ds-apphead__label:lang(ja) {
   font-family: var(--font-jp);

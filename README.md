@@ -93,4 +93,6 @@ npm version patch && git push --follow-tags
   is the matching hook for app-side layout decisions
 - `.ds-wash` (0.15.1) ships in `components.css`, not the base reset — a fixed viewport layer
   any app can drop at its root, including one that keeps its own preflight
+- `AppHeader` (0.16.0) takes `back`: on a pushed screen the label line becomes the back link
+  (`‹ Collection`) — two lines instead of app name + title + a back row; homes keep the name
 - `tailwind-preset.js` — token bridge for Tailwind apps (`presets: [dsPreset]`)

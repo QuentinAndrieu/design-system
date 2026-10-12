@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Icon } from "./Icon";
 
 export interface AppHeaderProps {
   /** The app's name, rendered small in the app's accent — what tells the six apps apart. */
@@ -10,6 +11,14 @@ export interface AppHeaderProps {
   lang?: string;
   /** The current section's title, in the display face. */
   title: ReactNode;
+  /**
+   * A pushed screen's way back (0.16.0). The label line BECOMES the back link — same place,
+   * same accent, a chevron before it — and names where it goes ("‹ Collection"), so a pushed
+   * screen reads in two lines (where you go back to · where you are) instead of stacking the
+   * app name, the title and a back row under them. Section homes leave it unset and keep the
+   * app's name. The one navigation the header carries: it replaces the label, never adds a row.
+   */
+  back?: { label: ReactNode; onClick: () => void };
   /** Optional right-aligned screen actions. Never navigation — tabs live in the TabBar. */
   actions?: ReactNode;
   /** App-side spacing tweaks (e.g. matching the app's own content padding). */
@@ -24,13 +33,20 @@ export interface AppHeaderProps {
 // Decorative per-screen art is NOT a header concern — it lives on the shell's
 // ambient layer (AppShell `ambient` slot), where it can run large behind the
 // content (nihongo's tab illustrations do exactly that).
-export function AppHeader({ label, lang, title, actions, className }: AppHeaderProps) {
+export function AppHeader({ label, lang, title, back, actions, className }: AppHeaderProps) {
   return (
     <header className={["ds-apphead", className].filter(Boolean).join(" ")}>
       <div className="ds-apphead__text">
-        <span className="ds-apphead__label" lang={lang}>
-          {label}
-        </span>
+        {back ? (
+          <button type="button" className="ds-apphead__label ds-apphead__back" onClick={back.onClick}>
+            <Icon name="back" size={13} />
+            {back.label}
+          </button>
+        ) : (
+          <span className="ds-apphead__label" lang={lang}>
+            {label}
+          </span>
+        )}
         <h1 className="ds-apphead__title">{title}</h1>
       </div>
       {actions ? <div className="ds-apphead__actions">{actions}</div> : null}

@@ -29,3 +29,9 @@ export const WithActions = () => (
     />
   </div>
 );
+
+export const Pushed = () => (
+  <div style={{ maxWidth: 440 }}>
+    <AppHeader label="kurumon" title="Kuru" back={{ label: "Plus", onClick: () => {} }} />
+  </div>
+);
