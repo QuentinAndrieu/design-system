@@ -1974,13 +1974,18 @@ html:has(.ds-shell--contained) body {
   color: var(--fg-muted);
 }
 
-.ds-dropdown__item:hover {
+.ds-dropdown__item:hover:not(:disabled) {
   color: rgb(var(--fg));
   background: rgb(var(--fg) / 0.06);
 }
 
 .ds-dropdown__item[aria-selected="true"] {
   color: rgb(var(--fg));
+}
+
+.ds-dropdown__item:disabled {
+  opacity: 0.4;
+  cursor: default;
 }
 
 /* ================= multi-select (filter dropdown) ================= */

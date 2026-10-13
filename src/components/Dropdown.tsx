@@ -5,6 +5,8 @@ import { Icon } from "./Icon";
 export interface DropdownOption {
   value: string;
   label: ReactNode;
+  /** Shown but not pickable (e.g. a choice the user can't make yet). */
+  disabled?: boolean;
 }
 
 export interface DropdownProps {
@@ -71,6 +73,8 @@ export function Dropdown({
               type="button"
               role="option"
               aria-selected={o.value === value}
+              aria-disabled={o.disabled || undefined}
+              disabled={o.disabled}
               className="ds-dropdown__item"
               onClick={() => {
                 onChange(o.value);
