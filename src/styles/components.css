@@ -167,9 +167,9 @@
 }
 
 .ds-chip[aria-pressed="true"] {
-  color: rgb(var(--fg));
-  background: var(--accent-wash);
-  border-color: rgb(var(--accent) / 0.55);
+  color: rgb(var(--accent-ink));
+  background: rgb(var(--accent));
+  border-color: rgb(var(--accent));
 }
 
 /* ================= badge ================= */
@@ -290,7 +290,7 @@
   border-radius: 9px;
   font-size: 12px;
   white-space: nowrap;
-  color: var(--fg-faint);
+  color: var(--fg-muted);
   transition: color var(--dur-fast) var(--ease);
 }
 
@@ -325,9 +325,13 @@
   display: inline-flex;
 }
 
+/* Selected = the accent at full strength, the same red as a solid button (0.19.0). It was mixed
+   60% with the surface, which made a washed pink in light (white on it: 3:1) and a maroon in dark —
+   one control, two colours, neither the accent. The unselected labels went from --fg-faint to
+   --fg-muted with it: the faint ones read as disabled. */
 .ds-seg button[aria-pressed="true"] {
   color: rgb(var(--accent-ink));
-  background: color-mix(in srgb, rgb(var(--accent)) 60%, transparent);
+  background: rgb(var(--accent));
 }
 
 /* sm: the compact toggles that sit above artwork */
@@ -577,7 +581,7 @@ button.ds-row:disabled {
   padding: 9px 0 7px;
   border: 1px solid transparent;
   border-radius: var(--radius-md);
-  color: var(--fg-faint);
+  color: var(--fg-muted);
   transition:
     background var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease);
@@ -596,13 +600,13 @@ button.ds-row:disabled {
 }
 
 .ds-day[aria-selected="true"] {
-  background: color-mix(in srgb, rgb(var(--accent)) 26%, transparent);
-  border-color: rgb(var(--accent) / 0.5);
+  background: rgb(var(--accent));
+  border-color: rgb(var(--accent));
 }
 
 .ds-day[aria-selected="true"] b,
 .ds-day[aria-selected="true"] span {
-  color: rgb(var(--fg));
+  color: rgb(var(--accent-ink));
 }
 
 /* ================= tab bar (floating glass capsule) ================= */
@@ -2061,9 +2065,11 @@ html:has(.ds-shell--contained) body {
   color: rgb(var(--fg));
 }
 
+/* A filter is on: the accent's wash, a tint — selection takes the full accent (seg, chip, day),
+   a state that something is narrowed takes the wash. */
 .ds-multiselect__trigger[data-active] {
-  border-color: rgb(var(--accent) / 0.6);
-  background: rgb(var(--accent) / 0.14);
+  border-color: rgb(var(--accent) / 0.55);
+  background: var(--accent-wash);
   color: rgb(var(--fg));
 }
 
