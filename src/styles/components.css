@@ -665,6 +665,42 @@ button.ds-row:disabled {
   cursor: default;
 }
 
+/* The glyph's box — the badge's anchor (0.18.0). Sized by the icon alone. */
+.ds-tab .ds-tab-glyph {
+  position: relative;
+  display: flex;
+  font-size: inherit;
+  letter-spacing: normal;
+}
+
+/* Something waiting on that tab: a dot, or a count, on the glyph's top-right corner — in the
+   accent, the one place the bar takes a hue: it is not the selection (that stays colourless),
+   it is news. */
+.ds-tab .ds-tab-badge {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgb(var(--accent));
+}
+
+.ds-tab .ds-tab-badge--count {
+  top: -6px;
+  right: -8px;
+  width: auto;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0;
+  text-align: center;
+  color: #fff;
+}
+
 /* ================= ambient wash ================= */
 /* Ambient wash blobs the glass refracts. Drop <div class="ds-wash" /> once at the
    app root; it sits behind everything and reacts to the active accent. A VIEWPORT

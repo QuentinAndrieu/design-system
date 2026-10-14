@@ -6,6 +6,9 @@ export interface Tab {
   icon?: ReactNode;
   /** Dim + block the tab (e.g. a destination with no content yet). */
   disabled?: boolean;
+  /** Something waiting there, on the glyph's corner, in the accent: `true` a dot, a number a
+   *  count (99+ past 99). `false`, `0` or absent: nothing. */
+  badge?: boolean | number;
 }
 
 export interface TabBarProps {
@@ -13,6 +16,13 @@ export interface TabBarProps {
   active: string;
   onChange: (id: string) => void;
 }
+
+const badgeOf = (badge: Tab["badge"]) =>
+  badge === true ? (
+    <span className="ds-tab-badge" aria-hidden />
+  ) : typeof badge === "number" && badge > 0 ? (
+    <span className="ds-tab-badge ds-tab-badge--count">{badge > 99 ? "99+" : badge}</span>
+  ) : null;
 
 /** Floating glass tab capsule, pinned above the home indicator. */
 export function TabBar({ tabs, active, onChange }: TabBarProps) {
@@ -27,7 +37,10 @@ export function TabBar({ tabs, active, onChange }: TabBarProps) {
           className="ds-tab"
           onClick={() => onChange(t.id)}
         >
-          {t.icon}
+          <span className="ds-tab-glyph">
+            {t.icon}
+            {badgeOf(t.badge)}
+          </span>
           <span>{t.label}</span>
         </button>
       ))}
