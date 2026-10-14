@@ -1799,11 +1799,17 @@ html:has(.ds-shell--contained) body {
 /* A page block, not pinned chrome: it scrolls with the content. The accent label
    is what tells the six apps apart; the title is the current section's.
    Decorative art is an AMBIENT-layer concern, not a header slot. */
+/* When the actions don't fit beside the title (a phone, a long title, a full slot — kurumon's
+   Collection), they take their own line ABOVE it, on the right, the way a large-title nav bar
+   does — instead of riding over the title, which never shrinks (0.18.1). `wrap-reverse` stacks
+   the lines bottom-up, so the cross axis starts at the bottom: `flex-start` is what keeps a
+   single line's actions on the title's baseline, as `flex-end` did before. */
 .ds-apphead {
   display: flex;
-  align-items: flex-end;
+  flex-wrap: wrap-reverse;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px 12px;
   padding: 8px 4px 4px;
   margin-bottom: 12px;
 }
@@ -1875,6 +1881,8 @@ html:has(.ds-shell--contained) body {
   gap: 8px;
   padding-bottom: 4px;
   flex: none;
+  /* on its own line, still the right edge */
+  margin-left: auto;
 }
 
 
