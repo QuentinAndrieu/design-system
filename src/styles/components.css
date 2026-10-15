@@ -348,6 +348,78 @@
   font-size: 10.5px;
 }
 
+/* ================= filter toggles (0.20.0) ================= */
+/* Filters where nothing lit means everything — the SegmentedControl's track and size, but each
+   toggle on or off on its own, and a lit one in the accent's WASH: a filter that is on is a state,
+   not a selection (the full accent stays the selection's). */
+.ds-ftog {
+  display: inline-flex;
+  flex: none;
+  gap: 2px;
+  padding: 3px;
+  box-sizing: border-box;
+  height: var(--ctl-h);
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.ds-ftog--fill {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.ds-ftog button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-radius: 9px;
+  font-size: 12px;
+  white-space: nowrap;
+  color: var(--fg-muted);
+  transition:
+    color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+
+.ds-ftog button[aria-pressed="true"] {
+  color: rgb(var(--accent));
+  background: var(--accent-wash);
+  box-shadow: inset 0 0 0 1px rgb(var(--accent) / 0.55);
+}
+
+.ds-ftog button:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.ds-ftog__ic {
+  display: inline-flex;
+}
+
+/* the sub-filter under a choice: lower, on a ground a step darker than the glass above it, its
+   idle icons near the full ink — present, never louder than its parent row */
+.ds-ftog--secondary {
+  height: 28px;
+  padding: 2px;
+  border-radius: 10px;
+  background: var(--ftog-sub-bg);
+}
+
+.ds-ftog--secondary button {
+  padding: 0 10px;
+  border-radius: 8px;
+  color: rgb(var(--fg) / 0.85);
+}
+
+.ds-ftog--secondary button[aria-pressed="true"] {
+  color: rgb(var(--accent));
+  box-shadow: inset 0 0 0 1px rgb(var(--accent) / 0.45);
+}
+
 /* ================= list row ================= */
 .ds-row {
   display: flex;
@@ -1803,17 +1875,15 @@ html:has(.ds-shell--contained) body {
 /* A page block, not pinned chrome: it scrolls with the content. The accent label
    is what tells the six apps apart; the title is the current section's.
    Decorative art is an AMBIENT-layer concern, not a header slot. */
-/* When the actions don't fit beside the title (a phone, a long title, a full slot — kurumon's
-   Collection), they take their own line ABOVE it, on the right, the way a large-title nav bar
-   does — instead of riding over the title, which never shrinks (0.18.1). `wrap-reverse` stacks
-   the lines bottom-up, so the cross axis starts at the bottom: `flex-start` is what keeps a
-   single line's actions on the title's baseline, as `flex-end` did before. */
+/* ONE line, always (0.20.0): the label and title sit at the same height on every screen, so the
+   actions never take a line of their own above them (0.18.1 let them, and the Collection's title
+   dropped a line below every other tab's). An app keeps its actions to what fits beside the title
+   on a 360 px phone — a screen's own tools belong in the screen. */
 .ds-apphead {
   display: flex;
-  flex-wrap: wrap-reverse;
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 8px 12px;
+  gap: 12px;
   padding: 8px 4px 4px;
   margin-bottom: 12px;
 }
@@ -1885,8 +1955,6 @@ html:has(.ds-shell--contained) body {
   gap: 8px;
   padding-bottom: 4px;
   flex: none;
-  /* on its own line, still the right edge */
-  margin-left: auto;
 }
 
 

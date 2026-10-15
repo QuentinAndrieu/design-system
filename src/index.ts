@@ -51,6 +51,8 @@ export { useDesktop, DESKTOP_QUERY, DESKTOP_MIN_WIDTH } from "./components/Deskt
 export { TabBar } from "./components/TabBar";
 export type { TabBarProps, Tab } from "./components/TabBar";
 export { SegmentedControl } from "./components/SegmentedControl";
+export { FilterToggles } from "./components/FilterToggles";
+export type { FilterToggleOption, FilterTogglesProps } from "./components/FilterToggles";
 export type {
   SegmentedControlProps,
   SegOption,

@@ -36,6 +36,8 @@
 
   /* — glass material: the shared recipe every app inherits — */
   --glass-bg: rgba(19, 22, 29, 0.46);
+  /* a sub-filter's ground (FilterToggles secondary): a step under the glass it sits beside */
+  --ftog-sub-bg: color-mix(in srgb, rgb(var(--bg)) 55%, #000);
   --glass-filter: blur(14px) saturate(150%) brightness(1.12);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-rim-lit: rgba(255, 255, 255, 0.3);
@@ -74,6 +76,7 @@
   --gold: 194 138 20;
 
   --glass-bg: rgba(255, 255, 255, 0.52);
+  --ftog-sub-bg: color-mix(in srgb, rgb(var(--bg)) 93%, rgb(var(--fg)));
   --glass-filter: blur(12px) saturate(180%) brightness(1.04);
   --glass-border: rgba(26, 28, 34, 0.08);
   --glass-rim-lit: rgba(255, 255, 255, 0.95);
