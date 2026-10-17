@@ -543,6 +543,10 @@ button.ds-row:disabled {
   opacity: var(--disabled);
   pointer-events: none;
 }
+/* the box carries the dim — the input inside it would otherwise dim a second time (0.22.1) */
+.ds-search__input:disabled {
+  opacity: 1;
+}
 
 .ds-search__ic {
   flex: none;
