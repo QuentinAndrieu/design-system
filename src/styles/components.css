@@ -2,14 +2,20 @@
    consumer app's own CSS. Ported from miru's design language, with miru's
    app-specific tokens (--acc/--grad/--ink…) swapped for the agnostic slots. */
 
-/* ================= disabled — one look for every control (0.22.0) =================
-   A disabled control dims to --disabled and takes no pointer cursor; its colours, background and
-   border stay what they are. Before, buttons dimmed to 0.55, segments/rows/search/tabs to 0.4, and
-   anything without a rule (fields, switches, chips, triggers) did not dim at all. :where() keeps
-   this at zero specificity, so a component's own rule — or an app's utility — still wins. */
+/* ================= disabled — one look for every control (0.22.0, flat since 0.23.0) =================
+   A disabled control dims to --disabled and takes no pointer cursor; an unfilled one also loses its
+   surface (the flat look — the rules at the END of this file, so they win the ties). Before 0.22,
+   buttons dimmed to 0.55, segments/rows/search/tabs to 0.4, and fields, switches, chips and
+   triggers did not dim at all. :where() keeps this at zero specificity, so a component's own rule
+   — or an app's utility — still wins. */
 :where(button, input, select, textarea):disabled {
   opacity: var(--disabled);
   cursor: default;
+}
+:where(input, select, textarea):disabled {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 /* ...and ONE ink (0.22.2): the same dim over different inks still read as different greys — a
@@ -2332,4 +2338,28 @@ html:has(.ds-shell--contained) body {
   inset: 0;
   display: grid;
   place-items: center;
+}
+
+/* ================= disabled: the flat look (0.23.0) =================
+   Last in the file on purpose — same-specificity ties go to it. In the glass look an active control
+   is already quiet (a faint fill, a hairline border), so a dimmed one still read as the same tile:
+   a disabled control is now no tile at all, its words and glyphs alone at --disabled. A filled
+   button keeps its fill, at --disabled-filled. */
+.ds-btn:disabled:not(.ds-btn--solid):not(.ds-btn--gradient),
+.ds-iconbtn:disabled,
+.ds-chip:disabled,
+.ds-ftog button:disabled,
+.ds-field__input:disabled,
+.ds-dropdown__trigger:disabled,
+.ds-multiselect__trigger:disabled,
+.ds-search:has(.ds-search__input:disabled) {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.ds-btn--solid:disabled,
+.ds-btn--gradient:disabled {
+  opacity: var(--disabled-filled);
 }

@@ -84,9 +84,11 @@ const preset = {
       transitionTimingFunction: {
         glass: "var(--ease)",
       },
-      // `disabled:opacity-disabled` — an app's own control dims exactly like the DS's (0.22.0)
+      // `disabled:opacity-disabled` — an app's own control dims exactly like the DS's (0.22.0);
+      // `-filled` for an app's own accent-filled button (0.23.0)
       opacity: {
         disabled: "var(--disabled)",
+        "disabled-filled": "var(--disabled-filled)",
       },
       zIndex: {
         tabbar: "var(--z-tabbar)",

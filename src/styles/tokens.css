@@ -128,7 +128,9 @@
   --z-scrim: 45;
   --z-sheet: 50;
 
-  /* the ONE disabled look (0.22.0): every disabled control dims to this, nothing else changes —
-     no second colour, no greyed background, no other opacity */
-  --disabled: 0.4;
+  /* the ONE disabled look (0.23.0, « B · Plat, plus pâle »): a disabled control loses its surface —
+     no fill, no border — and its words and glyphs dim to --disabled. A FILLED button (the accent
+     CTA) keeps its fill, dimmed to --disabled-filled: without it, it would just be red text. */
+  --disabled: 0.28;
+  --disabled-filled: 0.4;
 }
