@@ -52,10 +52,11 @@ export interface ConfigSheetProps {
   /** Notifies the app when the sheet opens/closes (e.g. to pause previews). */
   onOpenChange?: (open: boolean) => void;
   /**
-   * Hold the sheet open (`true`) or at rest (`false`) from the app — a guided
-   * tour bringing the form up (0.21.0). While set, the sheet lands back on this
-   * value whenever a drag, tap or Escape moves it off. Leave it undefined for
-   * the usual sheet the player alone opens and closes. Ignored while docked.
+   * `true` holds the sheet open from the app — a guided tour bringing the form
+   * up (0.21.0): it opens, and lands back open whenever a drag, tap or Escape
+   * closes it. `false` or undefined leaves the sheet to the player (0.21.1 —
+   * holding it at rest raced the open tween and left it drawn open while its
+   * state said closed). Ignored while docked.
    */
   open?: boolean;
   /**
@@ -191,10 +192,10 @@ export function ConfigSheet({
     [onOpenChange, tweenTo],
   );
 
-  // The app holding the sheet (`open` prop): land on its value, and back on it
-  // whenever the player moves the sheet off.
+  // The app holding the sheet open (`open` prop): open it, and again whenever
+  // the player closes it.
   useEffect(() => {
-    if (held !== undefined && held !== open && !docked) set(held);
+    if (held && !open && !docked) set(true);
   }, [held, open, docked, set]);
 
   // The hero's open-state width, measured in real pixels: what the viewport
