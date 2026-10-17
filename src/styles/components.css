@@ -12,6 +12,24 @@
   cursor: default;
 }
 
+/* ...and ONE ink (0.22.2): the same dim over different inks still read as different greys — a
+   segment's muted label and the search's faint placeholder came out far paler than an icon
+   button's full-colour glyph. So every unfilled control's words and glyphs take the text colour
+   first, then dim: one grey for all of them. (Filled buttons keep their accent ink.) */
+.ds-seg button:disabled,
+.ds-ftog button:disabled,
+.ds-tab:disabled,
+.ds-chip:disabled,
+.ds-iconbtn:disabled,
+.ds-dropdown__item:disabled,
+.ds-dropdown__trigger:disabled,
+.ds-multiselect__trigger:disabled,
+.ds-search:has(.ds-search__input:disabled) .ds-search__ic,
+.ds-search__input:disabled,
+.ds-search__input:disabled::placeholder {
+  color: rgb(var(--fg));
+}
+
 /* ================= glass surface ================= */
 .ds-glass {
   position: relative;
