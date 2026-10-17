@@ -84,6 +84,10 @@ const preset = {
       transitionTimingFunction: {
         glass: "var(--ease)",
       },
+      // `disabled:opacity-disabled` — an app's own control dims exactly like the DS's (0.22.0)
+      opacity: {
+        disabled: "var(--disabled)",
+      },
       zIndex: {
         tabbar: "var(--z-tabbar)",
         scrim: "var(--z-scrim)",

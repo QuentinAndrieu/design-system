@@ -2,6 +2,16 @@
    consumer app's own CSS. Ported from miru's design language, with miru's
    app-specific tokens (--acc/--grad/--ink…) swapped for the agnostic slots. */
 
+/* ================= disabled — one look for every control (0.22.0) =================
+   A disabled control dims to --disabled and takes no pointer cursor; its colours, background and
+   border stay what they are. Before, buttons dimmed to 0.55, segments/rows/search/tabs to 0.4, and
+   anything without a rule (fields, switches, chips, triggers) did not dim at all. :where() keeps
+   this at zero specificity, so a component's own rule — or an app's utility — still wins. */
+:where(button, input, select, textarea):disabled {
+  opacity: var(--disabled);
+  cursor: default;
+}
+
 /* ================= glass surface ================= */
 .ds-glass {
   position: relative;
@@ -63,7 +73,7 @@
 }
 
 .ds-btn:disabled {
-  opacity: 0.55;
+  opacity: var(--disabled);
   pointer-events: none;
 }
 
@@ -317,7 +327,7 @@
 }
 
 .ds-seg button:disabled {
-  opacity: 0.4;
+  opacity: var(--disabled);
   pointer-events: none;
 }
 
@@ -392,7 +402,7 @@
 }
 
 .ds-ftog button:disabled {
-  opacity: 0.4;
+  opacity: var(--disabled);
   pointer-events: none;
 }
 
@@ -467,7 +477,7 @@
 }
 
 button.ds-row:disabled {
-  opacity: 0.4;
+  opacity: var(--disabled);
   pointer-events: none;
 }
 
@@ -530,7 +540,7 @@ button.ds-row:disabled {
 
 /* a disabled search reads as off, like a disabled segment beside it (0.20.2) */
 .ds-search:has(.ds-search__input:disabled) {
-  opacity: 0.4;
+  opacity: var(--disabled);
   pointer-events: none;
 }
 
@@ -743,7 +753,7 @@ button.ds-row:disabled {
 }
 
 .ds-tab:disabled {
-  opacity: 0.4;
+  opacity: var(--disabled);
   cursor: default;
 }
 
@@ -2106,7 +2116,7 @@ html:has(.ds-shell--contained) body {
 }
 
 .ds-dropdown__item:disabled {
-  opacity: 0.4;
+  opacity: var(--disabled);
   cursor: default;
 }
 

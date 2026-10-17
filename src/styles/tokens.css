@@ -127,4 +127,8 @@
   --z-tabbar: 40;
   --z-scrim: 45;
   --z-sheet: 50;
+
+  /* the ONE disabled look (0.22.0): every disabled control dims to this, nothing else changes —
+     no second colour, no greyed background, no other opacity */
+  --disabled: 0.4;
 }
