@@ -528,6 +528,12 @@ button.ds-row:disabled {
   border-color: rgb(var(--accent));
 }
 
+/* a disabled search reads as off, like a disabled segment beside it (0.20.2) */
+.ds-search:has(.ds-search__input:disabled) {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
 .ds-search__ic {
   flex: none;
   color: var(--fg-faint);
