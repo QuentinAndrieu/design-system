@@ -52,6 +52,13 @@ export interface ConfigSheetProps {
   /** Notifies the app when the sheet opens/closes (e.g. to pause previews). */
   onOpenChange?: (open: boolean) => void;
   /**
+   * Hold the sheet open (`true`) or at rest (`false`) from the app — a guided
+   * tour bringing the form up (0.21.0). While set, the sheet lands back on this
+   * value whenever a drag, tap or Escape moves it off. Leave it undefined for
+   * the usual sheet the player alone opens and closes. Ignored while docked.
+   */
+  open?: boolean;
+  /**
    * The shell the studio sits in.
    *
    * `inline` (default) keeps it in the app's content column, under the app's
@@ -122,6 +129,7 @@ export function ConfigSheet({
   restLabel,
   dock = false,
   opener = true,
+  open: held,
 }: ConfigSheetProps) {
   const full = variant === "fullscreen";
   // Docked = the desktop shell (see `dock`): a permanent side panel instead of
@@ -182,6 +190,12 @@ export function ConfigSheet({
     },
     [onOpenChange, tweenTo],
   );
+
+  // The app holding the sheet (`open` prop): land on its value, and back on it
+  // whenever the player moves the sheet off.
+  useEffect(() => {
+    if (held !== undefined && held !== open && !docked) set(held);
+  }, [held, open, docked, set]);
 
   // The hero's open-state width, measured in real pixels: what the viewport
   // keeps above the sheet (minus the chrome above the artwork), times the
