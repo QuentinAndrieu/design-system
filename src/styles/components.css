@@ -2030,6 +2030,11 @@ html:has(.ds-shell--contained) body {
   z-index: var(--z-sheet);
   width: calc(100vw - 40px);
   max-width: 420px;
+  /* never taller than the screen: the head and the foot stay, the body scrolls (0.23.2 — a long
+     body, a grid of cards, ran thousands of px off both edges with its title and buttons) */
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border-radius: var(--radius-xl);
   background: var(--glass-panel-bg);
@@ -2053,6 +2058,20 @@ html:has(.ds-shell--contained) body {
 
 .ds-modal__body {
   padding: 16px 20px;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* the head and the foot keep their size; an `onSubmit` modal's form passes the column on */
+.ds-modal__head,
+.ds-modal__foot {
+  flex-shrink: 0;
+}
+.ds-modal > form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .ds-modal__foot {
