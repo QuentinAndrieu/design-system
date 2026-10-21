@@ -2025,14 +2025,17 @@ html:has(.ds-shell--contained) body {
 .ds-modal {
   position: fixed;
   left: 50%;
-  top: 50%;
+  /* centred in the screen's safe part: an installed iOS app draws its status bar over the page,
+     and a tall modal's title sat under the clock and the Dynamic Island (0.23.3) */
+  top: calc(50% + (env(safe-area-inset-top) - env(safe-area-inset-bottom)) / 2);
   transform: translate(-50%, -50%);
   z-index: var(--z-sheet);
   width: calc(100vw - 40px);
   max-width: 420px;
   /* never taller than the screen: the head and the foot stay, the body scrolls (0.23.2 — a long
-     body, a grid of cards, ran thousands of px off both edges with its title and buttons) */
-  max-height: calc(100dvh - 40px);
+     body, a grid of cards, ran thousands of px off both edges with its title and buttons) — nor
+     than its safe part (0.23.3) */
+  max-height: calc(100dvh - 40px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   overflow: hidden;
