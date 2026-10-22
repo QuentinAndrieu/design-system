@@ -15,6 +15,11 @@ export interface ModalProps {
    * Lets a short dialog submit without reaching for the mouse.
    */
   onSubmit?: () => void;
+  /**
+   * `wide` (0.24.0): up to 760px instead of 420 — for a dialog laid out in two columns (a preview
+   * beside its options). Still the screen's width less 40px on a phone.
+   */
+  size?: "default" | "wide";
 }
 
 /**
@@ -29,6 +34,7 @@ export function Modal({
   children,
   footer,
   onSubmit,
+  size = "default",
 }: ModalProps) {
   const body = (
     <>
@@ -41,7 +47,7 @@ export function Modal({
       {trigger ? <Dialog.Trigger asChild>{trigger}</Dialog.Trigger> : null}
       <Dialog.Portal>
         <Dialog.Overlay className="ds-scrim" />
-        <Dialog.Content className="ds-modal">
+        <Dialog.Content className={size === "wide" ? "ds-modal ds-modal--wide" : "ds-modal"}>
           <div className="ds-modal__head">
             <Dialog.Title className="ds-modal__title">{title}</Dialog.Title>
           </div>

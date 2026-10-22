@@ -2048,6 +2048,10 @@ html:has(.ds-shell--contained) body {
   animation: ds-modal-in var(--dur) var(--ease);
 }
 
+.ds-modal--wide {
+  max-width: 760px;
+}
+
 .ds-modal__head {
   padding: 16px 20px;
   border-bottom: 1px solid var(--glass-border);
