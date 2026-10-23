@@ -9,6 +9,9 @@ export interface Tab {
   /** Something waiting there, on the glyph's corner, in the accent: `true` a dot, a number a
    *  count (99+ past 99). `false`, `0` or absent: nothing. */
   badge?: boolean | number;
+  /** An extra class on this tab's button, for an app to set one tab apart (0.25.0 — torimon's
+   *  admin tabs). The selected state stays the bar's: contrast and weight, `aria-selected`. */
+  className?: string;
 }
 
 export interface TabBarProps {
@@ -34,7 +37,7 @@ export function TabBar({ tabs, active, onChange }: TabBarProps) {
           role="tab"
           aria-selected={t.id === active}
           disabled={t.disabled}
-          className="ds-tab"
+          className={t.className ? `ds-tab ${t.className}` : "ds-tab"}
           onClick={() => onChange(t.id)}
         >
           <span className="ds-tab-glyph">
