@@ -229,6 +229,64 @@
   border-color: rgb(var(--accent));
 }
 
+/* ================= the control surface (0.26.0) =================
+   Every secondary control stands on it — the outline and ghost buttons, the icon buttons, the chips,
+   and `.ds-ctl` for an app's own: a face a step off the page (--ctl-bg), a hairline, a shadow under
+   it; a step darker under the pointer, pressed down on a tap. On the glass they were the page's own
+   colour, and nothing said they could be pressed. The filled accent stays the one main action. */
+.ds-ctl,
+.ds-btn--outline,
+.ds-btn--ghost,
+.ds-iconbtn,
+.ds-chip:not([aria-pressed="true"]) {
+  color: rgb(var(--fg));
+  background: rgb(var(--ctl-bg));
+  border: 1px solid var(--ctl-border);
+  box-shadow: var(--ctl-shadow);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.ds-ctl {
+  transition:
+    transform var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+.ds-ctl:active:not(:disabled),
+.ds-btn--outline:active,
+.ds-btn--ghost:active,
+.ds-iconbtn:active,
+.ds-chip:active {
+  box-shadow: none;
+}
+.ds-ctl:active:not(:disabled) {
+  transform: translateY(1px);
+}
+@media (hover: hover) {
+  .ds-ctl:hover:not(:disabled),
+  .ds-btn--outline:hover:not(:disabled),
+  .ds-btn--ghost:hover:not(:disabled),
+  .ds-iconbtn:hover:not(:disabled),
+  .ds-chip:hover:not(:disabled):not([aria-pressed="true"]) {
+    color: rgb(var(--fg));
+    background: color-mix(in srgb, rgb(var(--ctl-bg)) 94%, rgb(var(--fg)));
+    border-color: var(--ctl-border);
+  }
+}
+
+/* ================= danger (0.26.0) =================
+   A destructive action — a delete, a removal — in the danger red's outline, never filled: filled red
+   is the accent's, the main action's, and the two read alike (« Supprimer » looked like « Récupérer »). */
+.ds-btn--danger {
+  color: rgb(var(--danger));
+  background: transparent;
+  border: 1.5px solid rgb(var(--danger));
+}
+@media (hover: hover) {
+  .ds-btn--danger:hover:not(:disabled) {
+    background: rgb(var(--danger) / 0.08);
+  }
+}
+
 /* ================= badge ================= */
 .ds-badge {
   display: inline-flex;
@@ -2399,6 +2457,7 @@ html:has(.ds-shell--contained) body {
    a disabled control is now no tile at all, its words and glyphs alone at --disabled. A filled
    button keeps its fill, at --disabled-filled. */
 .ds-btn:disabled:not(.ds-btn--solid):not(.ds-btn--gradient),
+.ds-ctl:disabled,
 .ds-iconbtn:disabled,
 .ds-chip:disabled,
 .ds-ftog button:disabled,
