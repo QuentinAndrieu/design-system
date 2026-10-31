@@ -1,6 +1,32 @@
-/* Component classes. Everything is prefixed `ds-` to avoid colliding with a
-   consumer app's own CSS. Ported from miru's design language, with miru's
-   app-specific tokens (--acc/--grad/--ink…) swapped for the agnostic slots. */
+/* =============================================================================
+   @quentinandrieu/design-system — components
+   -----------------------------------------------------------------------------
+   The classes behind the React components. Everything is prefixed `ds-` so it
+   never collides with a consumer app's own CSS. Apps also write these classes
+   by hand and restyle them from their own CSS (`ds-glass`, `ds-chip`,
+   `ds-tabbar`, `ds-cs-bar`, `ds-dropdown__trigger` …), so every class name and
+   every `--ds-*` property here is public API — never rename one, and grep the
+   apps before calling a rule dead. Naming rules: CONVENTIONS.md.
+
+   ORDER IS LOAD-BEARING in three places, because equal-specificity ties go to
+   the later rule:
+     1. the disabled baseline comes FIRST — it is :where()-zero-specificity, so
+        any component rule below (or an app utility) still wins;
+     2. the control surface comes AFTER button and chip — it re-skins them;
+     3. the flat disabled look comes LAST — it must win over every face above.
+   Otherwise sections are independent; add a new component as its own section
+   before "disabled: the flat look".
+
+   Contents (in file order)
+     disabled baseline · glass surface · icon · button (+ inline-control hover)
+     · chip · the control surface · danger · badge · avatar · progress bar
+     · field · segmented control · filter toggles · list row · settings group
+     · search field · thumbnail · week strip · tab bar · ambient wash
+     · app shell (+ desktop rail) · sheet · parallax sheet · config sheet
+     (+ fullscreen, docked) · skeleton · empty / error · toast · stats (kpi,
+     donut, bar chart) · rating & slider · sheet row · switch · app header
+     · modal · dropdown · multi-select · progress ring · disabled: the flat look
+   ========================================================================== */
 
 /* ================= disabled — one look for every control (0.22.0, flat since 0.23.0) =================
    A disabled control dims to --disabled and takes no pointer cursor; an unfilled one also loses its
@@ -578,7 +604,8 @@ button.ds-row:disabled {
   color: var(--fg-faint);
 }
 
-/* group + label spacing: a label directly above a group hugs it */
+/* the card clips its rows to its rounded corners; the label's 8px bottom margin
+   (above) is what makes a label hug the group it names */
 .ds-setgroup {
   padding: 3px;
   overflow: hidden;
@@ -831,8 +858,8 @@ button.ds-row:disabled {
 
 /* The selected tab is stated by contrast and weight, not by hue: the glyph comes
    up from --fg-faint to full --fg and the label goes bold. No accent tint, no
-   halo — six apps carry six accents, and the one that reads as a tasteful glow
-   in iris reads as a red smear in darkroom. */
+   halo — every app carries its own accent, and the one that reads as a tasteful
+   glow in iris reads as a red smear in darkroom. */
 .ds-tab[aria-selected="true"] {
   color: rgb(var(--fg));
 }
@@ -1842,7 +1869,7 @@ html:has(.ds-shell--contained) body {
   color: var(--fg-faint);
 }
 
-/* ================= rating: score + slider + emojis ================= */
+/* ================= rating & slider (big score over a range input) ================= */
 .ds-bigscore {
   font-size: 54px;
   font-weight: 700;
@@ -1978,7 +2005,7 @@ html:has(.ds-shell--contained) body {
 
 /* ================= app header (the fleet header — fudoki's shape) ================= */
 /* A page block, not pinned chrome: it scrolls with the content. The accent label
-   is what tells the six apps apart; the title is the current section's.
+   is what tells the fleet's apps apart; the title is the current section's.
    Decorative art is an AMBIENT-layer concern, not a header slot. */
 /* ONE line, always (0.20.0): the label and title sit at the same height on every screen, so the
    actions never take a line of their own above them (0.18.1 let them, and the Collection's title
@@ -2061,7 +2088,6 @@ html:has(.ds-shell--contained) body {
   padding-bottom: 4px;
   flex: none;
 }
-
 
 /* A fleet header inside a locked-frame shell: the content region becomes a
    column — the header takes its row, the screen keeps the rest and goes on
