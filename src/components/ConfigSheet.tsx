@@ -12,18 +12,7 @@ import {
 import { Icon } from "./Icon";
 import { useDesktop } from "./Desktop";
 import { cx } from "../internal/cx";
-
-/** Walk up to the nearest scrolling ancestor. Returns `null` when there is none
- *  (a page-scroll shell, where the document/window is the scroller). */
-function getScrollParent(node: HTMLElement | null): HTMLElement | null {
-  let el = node?.parentElement ?? null;
-  while (el) {
-    const oy = getComputedStyle(el).overflowY;
-    if (oy === "auto" || oy === "scroll") return el;
-    el = el.parentElement;
-  }
-  return null;
-}
+import { getScrollParent } from "../internal/scroll";
 
 /** Dragging the grip past this slice of the sheet's travel settles it the other way. */
 const DISMISS_RATIO = 0.22;

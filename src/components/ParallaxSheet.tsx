@@ -7,18 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { cx } from "../internal/cx";
-
-/** Walk up to the nearest scrolling ancestor. Returns `null` when there is none
- *  (a page-scroll shell, where the document/window is the scroller). */
-function getScrollParent(node: HTMLElement | null): HTMLElement | null {
-  let el = node?.parentElement ?? null;
-  while (el) {
-    const oy = getComputedStyle(el).overflowY;
-    if (oy === "auto" || oy === "scroll") return el;
-    el = el.parentElement;
-  }
-  return null;
-}
+import { getScrollParent } from "../internal/scroll";
 
 /** Unifies an overflow-scrolling element and the window into one small surface so
  *  the sheet works whether the app shell owns the scroll (`contained`) or the
