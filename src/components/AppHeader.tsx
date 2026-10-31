@@ -3,7 +3,7 @@ import { Icon } from "./Icon";
 import { cx } from "../internal/cx";
 
 export interface AppHeaderProps {
-  /** The app's name, rendered small in the app's accent — what tells the six apps apart. */
+  /** The app's name, rendered small in the app's accent — what tells the fleet's apps apart. */
   label: ReactNode;
   /**
    * Language of the label when it isn't Latin (e.g. "ja" for 風土記 / 日本語) —
@@ -26,14 +26,15 @@ export interface AppHeaderProps {
   className?: string;
 }
 
+// Decorative per-screen art is NOT a header concern — it lives on the shell's
+// ambient layer (AppShell `ambient` slot), where it can run large behind the
+// content (nihongo's tab illustrations do exactly that).
+
 /**
  * The fleet header (fudoki's shape): accent app-name label over the section title.
  * Rendered by `AppShell` via its `appHeader` slot so it scrolls with the content —
  * it is a page block, not pinned chrome.
  */
-// Decorative per-screen art is NOT a header concern — it lives on the shell's
-// ambient layer (AppShell `ambient` slot), where it can run large behind the
-// content (nihongo's tab illustrations do exactly that).
 export function AppHeader({ label, lang, title, back, actions, className }: AppHeaderProps) {
   return (
     <header className={cx("ds-apphead", className)}>

@@ -20,6 +20,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
 }
 
+/** The fleet button. `type` defaults to `"button"`, so it never submits a form by accident. */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "solid", className, type = "button", ...rest }, ref) => (
     <button

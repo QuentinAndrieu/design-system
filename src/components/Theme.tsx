@@ -184,7 +184,7 @@ export function themeBootScript({ storageKey, jsonPath, fallback }: ThemeBootOpt
     "}catch(e){}" +
     `if(p!=="auto"&&p!=="dark"&&p!=="light")p=${JSON.stringify(fallback)};` +
     "try{" +
-    'var r=p==="auto"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):p;' +
+    `var r=p==="auto"?(matchMedia(${JSON.stringify(DARK_MQ)}).matches?"dark":"light"):p;` +
     "document.documentElement.dataset.theme=r;" +
     // Create the meta when absent, don't just update it: no app declares viewport.themeColor
     // (a static one is theme-blind — Next injects it after this script and it would win), so

@@ -96,8 +96,8 @@ export interface ConfigSheetProps {
  * artwork owns the full column and a "configure" pill sits under it — no sheet
  * peeking. Opening scrolls the artwork to the top, shrinks it to the space the
  * sheet leaves, and slides the frosted sheet over the tab bar. The sheet scrolls
- * internally and only dismisses explicitly: drag the grip down, the ✕, tap the
- * artwork, or Escape — closing returns the artwork to its full-width rest state.
+ * internally and only dismisses explicitly: drag the grip down, tap the artwork,
+ * or Escape — closing returns the artwork to its full-width rest state.
  *
  * Hero children tagged `data-cs-hide` (toggles, action rows) are hidden while
  * the sheet is open, so the shrunk hero is the artwork alone.

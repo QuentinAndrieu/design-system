@@ -134,6 +134,7 @@ export interface IconProps {
   className?: string;
 }
 
+/** One glyph of the set, sized in px; inherits `currentColor` and is hidden from screen readers. */
 export function Icon({ name, size = 18, filled = false, style, className }: IconProps) {
   return (
     <svg
@@ -149,4 +150,5 @@ export function Icon({ name, size = 18, filled = false, style, className }: Icon
   );
 }
 
+/** Every icon name, in declaration order — for pickers and docs. */
 export const iconNames = Object.keys(ICONS) as IconName[];

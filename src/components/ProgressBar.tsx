@@ -8,6 +8,7 @@ export interface ProgressBarProps {
   done?: boolean;
 }
 
+/** Thin linear progress, clamped to 0–100 %. */
 export function ProgressBar({ value, max = 1, done }: ProgressBarProps) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (

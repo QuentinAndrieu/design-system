@@ -2,7 +2,7 @@ export interface WeekDay {
   key: string;
   /** Small mono caption under the number (e.g. "MON"). */
   label: string;
-  /** Large figure (e.g. day-of-month). Falls back to the label. */
+  /** Large figure (e.g. day-of-month). Falls back to the label's first two characters. */
   num?: string | number;
 }
 
