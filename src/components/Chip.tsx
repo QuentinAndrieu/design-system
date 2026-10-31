@@ -26,7 +26,11 @@ export function Chip({
   );
 }
 
+export interface ChipGroupProps {
+  children: ReactNode;
+}
+
 /** Wrapping flex container for a set of chips. */
-export function ChipGroup({ children }: { children: ReactNode }) {
+export function ChipGroup({ children }: ChipGroupProps) {
   return <div className="ds-chips">{children}</div>;
 }

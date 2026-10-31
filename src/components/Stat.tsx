@@ -15,7 +15,11 @@ export function StatTile({ value, label }: StatTileProps) {
   );
 }
 
+export interface StatGridProps {
+  children: ReactNode;
+}
+
 /** Two-column grid for a set of StatTiles. */
-export function StatGrid({ children }: { children: ReactNode }) {
+export function StatGrid({ children }: StatGridProps) {
   return <div className="ds-kpis">{children}</div>;
 }

@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export interface SheetProps {
   /** Controlled open state. Omit to let the trigger manage it. */
@@ -12,7 +12,7 @@ export interface SheetProps {
   children: ReactNode;
 }
 
-const srOnly: React.CSSProperties = {
+const srOnly: CSSProperties = {
   position: "absolute",
   width: 1,
   height: 1,

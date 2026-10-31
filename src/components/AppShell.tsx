@@ -1,4 +1,4 @@
-import type { ReactNode, Ref } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import { cx } from "../internal/cx";
 
 export interface AppShellProps {
@@ -96,7 +96,7 @@ export function AppShell({
   return (
     <div
       className={cx("ds-shell", `ds-shell--${width}`, `ds-shell--${scroll}`, rail && "ds-shell--rail")}
-      style={maxWidth ? ({ ["--ds-shell-max" as string]: maxWidth } as React.CSSProperties) : undefined}
+      style={maxWidth ? ({ "--ds-shell-max": maxWidth } as CSSProperties) : undefined}
     >
       {ambient != null && (
         <div className="ds-shell-ambient" aria-hidden>
