@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
+import { cx } from "../internal/cx";
 
 export type ButtonVariant =
   | "solid"
@@ -24,9 +25,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       type={type}
-      className={["ds-btn", `ds-btn--${variant}`, className]
-        .filter(Boolean)
-        .join(" ")}
+      className={cx("ds-btn", `ds-btn--${variant}`, className)}
       {...rest}
     />
   ),

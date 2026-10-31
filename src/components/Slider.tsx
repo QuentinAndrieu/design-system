@@ -1,4 +1,5 @@
 import type { CSSProperties, InputHTMLAttributes } from "react";
+import { cx } from "../internal/cx";
 
 export type SliderProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
@@ -13,7 +14,7 @@ export function Slider({ className, value, min = 0, max = 100, ...rest }: Slider
       value={value}
       min={min}
       max={max}
-      className={["ds-slider", className].filter(Boolean).join(" ")}
+      className={cx("ds-slider", className)}
       style={{ "--fill": `${fill}%` } as CSSProperties}
       {...rest}
     />

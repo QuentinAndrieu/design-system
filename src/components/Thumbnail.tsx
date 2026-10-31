@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface ThumbnailProps {
   src?: string;
@@ -16,9 +17,7 @@ export interface ThumbnailProps {
  */
 export function Thumbnail({ src, title, badge, fill, onClick }: ThumbnailProps) {
   const initial = title?.trim()?.[0]?.toUpperCase() ?? "?";
-  const className = ["ds-thumb", fill && "ds-thumb--fill"]
-    .filter(Boolean)
-    .join(" ");
+  const className = cx("ds-thumb", fill && "ds-thumb--fill");
   const inner = (
     <>
       {src ? (

@@ -6,6 +6,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
+import { cx } from "../internal/cx";
 
 /** Walk up to the nearest scrolling ancestor. Returns `null` when there is none
  *  (a page-scroll shell, where the document/window is the scroller). */
@@ -166,9 +167,7 @@ export function ParallaxSheet({
         {hero}
       </div>
       <div
-        className={
-          className ? `ds-parallax-sheet ${className}` : "ds-parallax-sheet"
-        }
+        className={cx("ds-parallax-sheet", className)}
         style={{ top: peek, height: sheetH }}
       >
         <div className="ds-parallax-grip" aria-hidden />

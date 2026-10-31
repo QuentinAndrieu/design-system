@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import { cx } from "../internal/cx";
 
 export interface AppHeaderProps {
   /** The app's name, rendered small in the app's accent — what tells the six apps apart. */
@@ -35,7 +36,7 @@ export interface AppHeaderProps {
 // content (nihongo's tab illustrations do exactly that).
 export function AppHeader({ label, lang, title, back, actions, className }: AppHeaderProps) {
   return (
-    <header className={["ds-apphead", className].filter(Boolean).join(" ")}>
+    <header className={cx("ds-apphead", className)}>
       <div className="ds-apphead__text">
         {back ? (
           <button type="button" className="ds-apphead__label ds-apphead__back" onClick={back.onClick}>

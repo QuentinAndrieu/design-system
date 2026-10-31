@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 // A hand-drawn, zero-dependency icon set (ported from miru) on a 24×24 grid.
 // Stroke-based by default; `filled` swaps to fill. No lucide, fully agnostic.
@@ -140,9 +141,7 @@ export function Icon({ name, size = 18, filled = false, style, className }: Icon
       width={size}
       height={size}
       aria-hidden="true"
-      className={["ds-ic", filled && "ds-ic--filled", className]
-        .filter(Boolean)
-        .join(" ")}
+      className={cx("ds-ic", filled && "ds-ic--filled", className)}
       style={style}
     >
       {ICONS[name]}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface SheetRowProps {
   icon?: ReactNode;
@@ -28,9 +29,7 @@ export function SheetRow({
     <button
       type="button"
       aria-selected={selected}
-      className={["ds-sheet-row", danger && "ds-sheet-row--danger"]
-        .filter(Boolean)
-        .join(" ")}
+      className={cx("ds-sheet-row", danger && "ds-sheet-row--danger")}
       onClick={onClick}
     >
       {dotColor ? (

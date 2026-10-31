@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface ChipProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   selected?: boolean;
@@ -17,7 +18,7 @@ export function Chip({
     <button
       type={type}
       aria-pressed={selected}
-      className={["ds-chip", className].filter(Boolean).join(" ")}
+      className={cx("ds-chip", className)}
       {...rest}
     >
       {children}

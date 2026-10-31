@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { cx } from "../internal/cx";
 
 export interface SkeletonProps {
   /** `line` for text, `cover` for a 2:3 poster, `card` for a list item. */
@@ -12,7 +13,7 @@ export interface SkeletonProps {
 export function Skeleton({ variant = "line", width, height, style }: SkeletonProps) {
   return (
     <div
-      className={`ds-skel ds-skel--${variant}`}
+      className={cx("ds-skel", `ds-skel--${variant}`)}
       style={{ width, height, ...style }}
     />
   );

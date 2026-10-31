@@ -1,5 +1,6 @@
 import { forwardRef, useId } from "react";
 import type { InputHTMLAttributes, ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: ReactNode;
@@ -20,7 +21,7 @@ export const Field = forwardRef<HTMLInputElement, FieldProps>(
         <input
           ref={ref}
           id={inputId}
-          className={["ds-field__input", className].filter(Boolean).join(" ")}
+          className={cx("ds-field__input", className)}
           {...rest}
         />
       </div>

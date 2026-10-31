@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface SegOption {
   value: string;
@@ -37,9 +38,7 @@ export function SegmentedControl({
 }: SegmentedControlProps) {
   return (
     <div
-      className={["ds-seg", size === "sm" && "ds-seg--sm", fill && "ds-seg--fill"]
-        .filter(Boolean)
-        .join(" ")}
+      className={cx("ds-seg", size === "sm" && "ds-seg--sm", fill && "ds-seg--fill")}
       role="group"
     >
       {options.map((o) => (

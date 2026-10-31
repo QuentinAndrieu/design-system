@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Icon } from "./Icon";
+import { cx } from "../internal/cx";
 
 /** The right edge a panel anchored under `el` must stay inside: the nearest ancestor whose
  *  horizontal overflow is clipped, else the viewport. */
@@ -109,10 +110,7 @@ export function MultiSelect({
 
       {open ? (
         <div
-          className={
-            "ds-multiselect__panel" +
-            (alignRight ? " ds-multiselect__panel--right" : "")
-          }
+          className={cx("ds-multiselect__panel", alignRight && "ds-multiselect__panel--right")}
           role="listbox"
           aria-multiselectable="true"
         >

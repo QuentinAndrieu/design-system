@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export type BadgeVariant = "default" | "score" | "accent";
 
@@ -9,7 +10,9 @@ export interface BadgeProps {
 
 /** Small mono label. `score` = gold, `accent` = gradient fill. */
 export function Badge({ variant = "default", children }: BadgeProps) {
-  const className =
-    variant === "default" ? "ds-badge" : `ds-badge ds-badge--${variant}`;
-  return <span className={className}>{children}</span>;
+  return (
+    <span className={cx("ds-badge", variant !== "default" && `ds-badge--${variant}`)}>
+      {children}
+    </span>
+  );
 }

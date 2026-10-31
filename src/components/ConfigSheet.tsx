@@ -11,6 +11,7 @@ import {
 } from "react";
 import { Icon } from "./Icon";
 import { useDesktop } from "./Desktop";
+import { cx } from "../internal/cx";
 
 /** Walk up to the nearest scrolling ancestor. Returns `null` when there is none
  *  (a page-scroll shell, where the document/window is the scroller). */
@@ -355,18 +356,19 @@ export function ConfigSheet({
     settle(dragFromP.current > 0.5);
   };
 
-  const cls = ["ds-configsheet"];
-  if (full) cls.push("ds-configsheet--full");
-  // Docked ignores `open` wholesale — the panel is always there — so the open
-  // class stays off too: none of its rules (hidden furniture, inert tools)
-  // may leak into the desktop shape through a stale `open`.
-  if (docked) cls.push("ds-configsheet--docked");
-  else if (open) cls.push("ds-configsheet--open");
+  const rootClass = cx(
+    "ds-configsheet",
+    full && "ds-configsheet--full",
+    // Docked ignores `open` wholesale — the panel is always there — so the open
+    // class stays off too: none of its rules (hidden furniture, inert tools)
+    // may leak into the desktop shape through a stale `open`.
+    docked ? "ds-configsheet--docked" : open && "ds-configsheet--open",
+  );
 
   return (
     <div
       ref={rootRef}
-      className={cls.join(" ")}
+      className={rootClass}
       style={{ "--ds-cs-aspect": aspect } as CSSProperties}
     >
       {/* The screen's action row + the configure opener, kurumon's top-row
@@ -403,7 +405,7 @@ export function ConfigSheet({
       </div>
       <div
         ref={sheetRef}
-        className={className ? `ds-cs-sheet ${className}` : "ds-cs-sheet"}
+        className={cx("ds-cs-sheet", className)}
         aria-hidden={docked ? undefined : !open}
       >
         <div

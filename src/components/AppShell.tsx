@@ -1,4 +1,5 @@
 import type { ReactNode, Ref } from "react";
+import { cx } from "../internal/cx";
 
 export interface AppShellProps {
   /** Screen content. */
@@ -94,9 +95,7 @@ export function AppShell({
 }: AppShellProps) {
   return (
     <div
-      className={[`ds-shell ds-shell--${width} ds-shell--${scroll}`, rail && "ds-shell--rail"]
-        .filter(Boolean)
-        .join(" ")}
+      className={cx("ds-shell", `ds-shell--${width}`, `ds-shell--${scroll}`, rail && "ds-shell--rail")}
       style={maxWidth ? ({ ["--ds-shell-max" as string]: maxWidth } as React.CSSProperties) : undefined}
     >
       {ambient != null && (
@@ -107,7 +106,7 @@ export function AppShell({
       {header != null && <div className="ds-shell-header">{header}</div>}
       <main
         ref={contentRef}
-        className={className ? `ds-shell-content ${className}` : "ds-shell-content"}
+        className={cx("ds-shell-content", className)}
       >
         {appHeader}
         {children}

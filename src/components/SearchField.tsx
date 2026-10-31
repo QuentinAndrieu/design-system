@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import type { InputHTMLAttributes } from "react";
 import { Icon } from "./Icon";
+import { cx } from "../internal/cx";
 
 export interface SearchFieldProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange" | "value"> {
@@ -16,7 +17,7 @@ export interface SearchFieldProps
  */
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
   ({ value, onValueChange, className, ...rest }, ref) => (
-    <div className={["ds-search", className].filter(Boolean).join(" ")}>
+    <div className={cx("ds-search", className)}>
       <Icon name="search" size={15} className="ds-search__ic" />
       <input
         ref={ref}

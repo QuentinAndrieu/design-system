@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface Tab {
   id: string;
@@ -37,7 +38,7 @@ export function TabBar({ tabs, active, onChange }: TabBarProps) {
           role="tab"
           aria-selected={t.id === active}
           disabled={t.disabled}
-          className={t.className ? `ds-tab ${t.className}` : "ds-tab"}
+          className={cx("ds-tab", t.className)}
           onClick={() => onChange(t.id)}
         >
           <span className="ds-tab-glyph">

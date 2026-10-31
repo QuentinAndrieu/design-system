@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import type { HTMLAttributes } from "react";
+import { cx } from "../internal/cx";
 
 export type GlassProps = HTMLAttributes<HTMLDivElement>;
 
@@ -8,7 +9,7 @@ export const Glass = forwardRef<HTMLDivElement, GlassProps>(
   ({ className, ...rest }, ref) => (
     <div
       ref={ref}
-      className={["ds-glass", className].filter(Boolean).join(" ")}
+      className={cx("ds-glass", className)}
       {...rest}
     />
   ),

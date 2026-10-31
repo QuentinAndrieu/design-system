@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cx } from "../internal/cx";
 
 export interface FilterToggleOption {
   value: string;
@@ -42,7 +43,7 @@ export function FilterToggles({ options, value, onChange, multiple = false, seco
   };
   return (
     <div
-      className={["ds-ftog", secondary && "ds-ftog--secondary", fill && "ds-ftog--fill"].filter(Boolean).join(" ")}
+      className={cx("ds-ftog", secondary && "ds-ftog--secondary", fill && "ds-ftog--fill")}
       role="group"
     >
       {options.map((o) => (

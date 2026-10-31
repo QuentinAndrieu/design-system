@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import type { ButtonHTMLAttributes } from "react";
+import { cx } from "../internal/cx";
 
 export type IconButtonProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -9,7 +10,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
     <button
       ref={ref}
       type={type}
-      className={["ds-iconbtn", className].filter(Boolean).join(" ")}
+      className={cx("ds-iconbtn", className)}
       {...rest}
     />
   ),
