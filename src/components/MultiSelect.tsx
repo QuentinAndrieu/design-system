@@ -1,6 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { Icon } from "./Icon";
+import { useDismiss } from "../internal/useDismiss";
 import { cx } from "../internal/cx";
 
 /** The right edge a panel anchored under `el` must stay inside: the nearest ancestor whose
@@ -57,23 +58,7 @@ export function MultiSelect({
   const count = selected.size;
   const active = count > 0;
 
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  useDismiss(rootRef, open, setOpen);
 
   // Collision-aware: a left-anchored panel runs off the right edge when the trigger sits near it,
   // so measure on open and flip to right-anchored (opens leftward) when it wouldn't fit. The edge

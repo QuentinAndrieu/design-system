@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import { useDismiss } from "../internal/useDismiss";
 
 export interface DropdownOption {
   value: string;
@@ -30,23 +31,7 @@ export function Dropdown({
   const rootRef = useRef<HTMLDivElement>(null);
   const selected = options.find((o) => o.value === value);
 
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [open]);
+  useDismiss(rootRef, open, setOpen);
 
   return (
     <div className="ds-dropdown" ref={rootRef}>
