@@ -130,19 +130,9 @@
   -webkit-backdrop-filter: var(--glass-filter);
 }
 
-.ds-btn--ghost {
-  color: rgb(var(--fg));
-}
-
+/* `ghost` and `outline` take their face from the control surface (below). */
 .ds-btn--ghost:hover {
   background: rgb(var(--fg) / 0.06);
-}
-
-/* bordered secondary action */
-.ds-btn--outline {
-  color: rgb(var(--fg));
-  background: rgb(var(--fg) / 0.04);
-  border: 1px solid rgb(var(--fg) / 0.12);
 }
 
 .ds-btn--outline:hover {
@@ -150,21 +140,11 @@
 }
 
 /* ---------- pointer hover on the inline controls (0.25.1) ----------
-   The chips, the segments and the filter toggles had none — only the buttons did, and the outline's
-   was a 4 % step nobody saw. One answer for all of them: the ink comes up to full --fg on the
-   faintest --fg tint (the outline a step firmer, its edge too). A pressed segment/toggle/chip keeps
-   its accent; disabled keeps its flat look. Pointer devices only, so a tap never leaves it lit. */
+   The segments and the filter toggles had none — only the buttons did. The ink comes up to full
+   --fg on the faintest --fg tint. A pressed segment/toggle keeps its accent; disabled keeps its flat
+   look. Pointer devices only, so a tap never leaves it lit. (The chips', the icon buttons' and the
+   outline's hover, born here too, are the control surface's since 0.26.0 — see below.) */
 @media (hover: hover) {
-  .ds-btn--outline:hover:not(:disabled) {
-    background: rgb(var(--fg) / 0.1);
-    border-color: rgb(var(--fg) / 0.22);
-  }
-  .ds-chip:hover:not(:disabled):not([aria-pressed="true"]),
-  .ds-iconbtn:hover:not(:disabled) {
-    color: rgb(var(--fg));
-    background: rgb(var(--fg) / 0.08);
-    border-color: rgb(var(--fg) / 0.2);
-  }
   .ds-seg button:hover:not(:disabled):not([aria-pressed="true"]),
   .ds-ftog button:hover:not(:disabled):not([aria-pressed="true"]) {
     color: rgb(var(--fg));
@@ -180,11 +160,7 @@
   height: 38px;
   flex: none;
   border-radius: var(--radius-pill);
-  color: rgb(var(--fg));
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  /* face, edge and ink: the control surface (below) */
   transition: transform var(--dur-fast) var(--ease);
 }
 
