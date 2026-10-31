@@ -1,4 +1,6 @@
-// Public API. CSS is imported separately by consumers:
+// Public API — the only module consumers import from. Each component's value export
+// is followed by its types; src/internal/ is never re-exported (see CONVENTIONS.md).
+// CSS is imported separately by consumers:
 //   import "@quentinandrieu/design-system/styles.css";
 //   import "@quentinandrieu/design-system/accents/iris.css";
 
@@ -51,12 +53,9 @@ export { useDesktop, DESKTOP_QUERY, DESKTOP_MIN_WIDTH } from "./components/Deskt
 export { TabBar } from "./components/TabBar";
 export type { TabBarProps, Tab } from "./components/TabBar";
 export { SegmentedControl } from "./components/SegmentedControl";
+export type { SegmentedControlProps, SegOption } from "./components/SegmentedControl";
 export { FilterToggles } from "./components/FilterToggles";
 export type { FilterToggleOption, FilterTogglesProps } from "./components/FilterToggles";
-export type {
-  SegmentedControlProps,
-  SegOption,
-} from "./components/SegmentedControl";
 export { WeekStrip } from "./components/WeekStrip";
 export type { WeekStripProps, WeekDay } from "./components/WeekStrip";
 
@@ -68,10 +67,7 @@ export type { SearchFieldProps } from "./components/SearchField";
 export { Dropdown } from "./components/Dropdown";
 export type { DropdownProps, DropdownOption } from "./components/Dropdown";
 export { MultiSelect } from "./components/MultiSelect";
-export type {
-  MultiSelectProps,
-  MultiSelectOption,
-} from "./components/MultiSelect";
+export type { MultiSelectProps, MultiSelectOption } from "./components/MultiSelect";
 export { Slider } from "./components/Slider";
 export type { SliderProps } from "./components/Slider";
 export { Switch } from "./components/Switch";
