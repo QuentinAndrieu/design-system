@@ -197,6 +197,12 @@ export function themeBootScript({ storageKey, jsonPath, fallback }: ThemeBootOpt
   );
 }
 
+const DEFAULT_LABELS: Record<ThemePref, string> = {
+  auto: "Auto",
+  dark: "Dark",
+  light: "Light",
+};
+
 export interface ThemeSelectProps {
   value: ThemePref;
   onChange: (pref: ThemePref) => void;
@@ -205,12 +211,6 @@ export interface ThemeSelectProps {
   /** Override for a localised app (kurumon reads French). */
   labels?: Record<ThemePref, string>;
 }
-
-const DEFAULT_LABELS: Record<ThemePref, string> = {
-  auto: "Auto",
-  dark: "Dark",
-  light: "Light",
-};
 
 /**
  * The fleet's theme control: Auto / Dark / Light, for the Theme row of every More

@@ -1,17 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import type { CSSProperties, ReactNode } from "react";
 
-export interface SheetProps {
-  /** Controlled open state. Omit to let the trigger manage it. */
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  /** Optional element that opens the sheet (rendered via Radix `asChild`). */
-  trigger?: ReactNode;
-  /** Visible heading. If omitted, a screen-reader-only title is used for a11y. */
-  title?: ReactNode;
-  children: ReactNode;
-}
-
 const srOnly: CSSProperties = {
   position: "absolute",
   width: 1,
@@ -23,6 +12,17 @@ const srOnly: CSSProperties = {
   whiteSpace: "nowrap",
   border: 0,
 };
+
+export interface SheetProps {
+  /** Controlled open state. Omit to let the trigger manage it. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  /** Optional element that opens the sheet (rendered via Radix `asChild`). */
+  trigger?: ReactNode;
+  /** Visible heading. If omitted, a screen-reader-only title is used for a11y. */
+  title?: ReactNode;
+  children: ReactNode;
+}
 
 /**
  * Bottom sheet built on Radix Dialog — focus trap, Escape, and scroll-lock come
