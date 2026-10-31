@@ -959,10 +959,12 @@ button.ds-row:disabled {
    real bottom edge there — scoped to standalone since 100vh overshoots in a tab. */
 :root {
   --app-viewport-h: 100%;
-  /* Capsule hovers --tabbar-offset above the bottom edge (trims the raw
+  /* Roughly where the capsule floats above the bottom edge (trims the raw
      home-indicator inset, floors on devices without one); page-scroll shells pad
      content by --tabbar-clearance (offset + capsule height + breathing room) so
-     the last items clear the glass. */
+     the last items clear the glass. Only the clearance reads it: .ds-tabbar
+     places itself with its own `bottom` (the inset less 1rem, not 0.75rem), so
+     the clearance errs a quarter-rem generous. */
   --tabbar-offset: max(env(safe-area-inset-bottom) - 0.75rem, 0.75rem);
   --tabbar-clearance: calc(var(--tabbar-offset) + 4.25rem);
   --ds-shell-max: 28rem;

@@ -68,7 +68,7 @@ export function MultiSelect({
   const [alignRight, setAlignRight] = useState(false);
   useLayoutEffect(() => {
     if (!open || !rootRef.current) return;
-    const PANEL_W = 224;
+    const PANEL_W = 224; // .ds-multiselect__panel's width in components.css — keep them equal
     const left = rootRef.current.getBoundingClientRect().left;
     setAlignRight(left + PANEL_W > clipRight(rootRef.current) - 8);
   }, [open]);
