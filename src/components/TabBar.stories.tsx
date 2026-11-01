@@ -14,7 +14,7 @@ export const Bottom = () => {
         { id: "home", label: "Home", icon: <Icon name="home" /> },
         { id: "search", label: "Search", icon: <Icon name="search" /> },
         { id: "lib", label: "Library", icon: <Icon name="lib" /> },
-        { id: "weekly", label: "Weekly", icon: <Icon name="cal" /> },
+        { id: "weekly", label: "Weekly", icon: <Icon name="cal" />, badge: 12, badgeMax: 9 },
         { id: "you", label: "You", icon: <Icon name="user" /> },
       ]}
     />
@@ -32,7 +32,7 @@ export const Badges = () => {
         { id: "home", label: "Home", icon: <Icon name="home" />, badge: true },
         { id: "search", label: "Search", icon: <Icon name="search" /> },
         { id: "lib", label: "Library", icon: <Icon name="lib" /> },
-        { id: "weekly", label: "Weekly", icon: <Icon name="cal" /> },
+        { id: "weekly", label: "Weekly", icon: <Icon name="cal" />, badge: 12, badgeMax: 9 },
         { id: "you", label: "You", icon: <Icon name="user" />, badge: 3 },
       ]}
     />
