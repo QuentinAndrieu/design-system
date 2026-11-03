@@ -1,6 +1,7 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import type { ReactNode } from "react";
 import { cx } from "../internal/cx";
+import { focusBox } from "../internal/focusBox";
 
 export interface ModalProps {
   open?: boolean;
@@ -48,7 +49,10 @@ export function Modal({
       {trigger ? <Dialog.Trigger asChild>{trigger}</Dialog.Trigger> : null}
       <Dialog.Portal>
         <Dialog.Overlay className="ds-scrim" />
-        <Dialog.Content className={cx("ds-modal", size === "wide" && "ds-modal--wide")}>
+        <Dialog.Content
+          className={cx("ds-modal", size === "wide" && "ds-modal--wide")}
+          onOpenAutoFocus={focusBox}
+        >
           <div className="ds-modal__head">
             <Dialog.Title className="ds-modal__title">{title}</Dialog.Title>
           </div>

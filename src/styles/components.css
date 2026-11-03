@@ -1158,6 +1158,12 @@ html:has(.ds-shell--contained) body {
   animation: ds-fade-in var(--dur) var(--ease);
 }
 
+/* a dialog opens focused on its box (`focusBox`): no ring round the whole box */
+.ds-sheet:focus,
+.ds-modal:focus {
+  outline: none;
+}
+
 .ds-sheet {
   position: fixed;
   left: 0;

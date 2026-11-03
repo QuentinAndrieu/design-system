@@ -1,5 +1,6 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import type { CSSProperties, ReactNode } from "react";
+import { focusBox } from "../internal/focusBox";
 
 const srOnly: CSSProperties = {
   position: "absolute",
@@ -40,7 +41,7 @@ export function Sheet({
       {trigger ? <Dialog.Trigger asChild>{trigger}</Dialog.Trigger> : null}
       <Dialog.Portal>
         <Dialog.Overlay className="ds-scrim" />
-        <Dialog.Content className="ds-sheet">
+        <Dialog.Content className="ds-sheet" onOpenAutoFocus={focusBox}>
           <div className="ds-sheet__grip" />
           {title ? (
             <Dialog.Title
